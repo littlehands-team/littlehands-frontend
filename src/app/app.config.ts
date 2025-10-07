@@ -20,6 +20,7 @@ import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideAnimations(),
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
@@ -27,9 +28,8 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(
       MatFormFieldModule,
       MatInputModule,
-      MatButtonModule
+      MatButtonModule,
     ),
-    provideAnimations(), // ✅ requerido
     provideNgToast(),    // ✅ necesario para ng-angular-popup
   ]
 };

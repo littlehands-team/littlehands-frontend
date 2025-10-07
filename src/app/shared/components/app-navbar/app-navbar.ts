@@ -12,8 +12,7 @@ import {NgClass} from '@angular/common';
     MatIconModule,
     MatButton,
     RouterLink,
-    RouterLinkActive,
-    NgClass
+    RouterLinkActive
   ],
   templateUrl: './app-navbar.html',
   styleUrl: './app-navbar.css'
