@@ -9,6 +9,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatBadgeModule } from '@angular/material/badge';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+
 
 
 @Component({
@@ -34,14 +36,15 @@ export class AppNavbar {
   menuOpened = false;
   searchQuery = '';
 
+  constructor(private router: Router) { }
+
   onSearch() {
     console.log('Buscando:', this.searchQuery);
     // Implementar lógica de búsqueda
   }
 
   goToAccount() {
-    console.log('Ir a cuenta');
-    // Navegar a la página de cuenta
+    this.router.navigate(['/auth/login']);
   }
 
   goToCart() {

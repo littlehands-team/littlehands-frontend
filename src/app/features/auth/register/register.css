@@ -1,241 +1,179 @@
-/* Container principal */
-.register-container {
-  max-width: 420px;
-  margin: 0 auto;
-  padding: 40px 32px;
-  background-color: #ffffff;
-  min-height: 100vh;
+/* Wrapper principal */
+.register-wrapper {
   display: flex;
-  flex-direction: column;
   justify-content: center;
-}
-
-/* Header */
-.register-header {
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.brand-title {
-  font-family: 'Poppins', sans-serif;
-  font-size: 2rem;
-  font-weight: 600;
-  margin: 0 0 8px 0;
-  color: #1033d3;
-  letter-spacing: -0.5px;
-}
-
-.subtitle {
-  font-size: 16px;
-  color: #666666;
-  margin: 0 0 24px 0;
-  font-weight: 400;
-}
-
-.step {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: #f5f5f5;
-  border: 2px solid #e0e0e0;
-  display: flex;
   align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
+  min-height: calc(100vh - 200px);
+  padding: 40px 20px;
+  background-color: #f9f9f9;
 }
 
-.step.active {
-  background-color: #1033d3;
-  border-color: #1033d3;
-}
-
-.step.completed {
-  background-color: #1033d3;
-  border-color: #1033d3;
-}
-
-.step-number {
-  font-size: 14px;
-  font-weight: 600;
-  color: #666666;
-}
-
-.step.active .step-number,
-.step.completed .step-number {
-  color: #ffffff;
-}
-
-.step-line {
-  width: 60px;
-  height: 2px;
-  background-color: #e0e0e0;
-  margin: 0 8px;
-  transition: background-color 0.3s ease;
-}
-
-.step-line.completed {
-  background-color: #1033d3;
-}
-
-.step-text {
-  font-size: 14px;
-  color: #666666;
-  margin: 0;
-  font-weight: 500;
-}
-
-/* Step Content */
-.step-content {
+.register-container {
+  display: flex;
+  max-width: 1200px;
   width: 100%;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.step-title {
-  font-size: 18px;
+/* Secciones */
+.register-section,
+.login-section {
+  flex: 1;
+  padding: 60px 50px;
+}
+
+.register-section {
+  border-right: 1px solid #e0e0e0;
+}
+
+.section-title {
+  font-size: 24px;
   font-weight: 600;
-  color: #333333;
-  margin: 0 0 24px 0;
-  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+  letter-spacing: 1px;
 }
 
 /* Formulario */
 .register-form {
-  width: 100%;
-}
-
-.full-width {
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-/* Income Section */
-
-.prefix-simbol {
-  margin-left: 20px;
-}
-
-.how-many-money{
-  margin-bottom: 0 !important;
-}
-
-.prefer-not-checkbox {
-  margin-bottom: 16px;
-}
-
-/* Botones */
-.register-container .register-btn {
-  width: 100%;
-  height: 48px;
-  background-color: #1033d3;
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: 500;
-  border-radius: 12px;
-  text-transform: none;
-  margin-bottom: 24px;
-  transition: background-color 0.3s ease;
-}
-
-.register-container .register-btn:hover:not(:disabled) {
-  background-color: #0d2bb8;
-}
-
-.register-container .register-btn:disabled {
-  background-color: #f5f5f5;
-  color: #cccccc;
-  cursor: not-allowed;
-}
-
-.register-container .back-btn {
-  width: 48%;
-  height: 48px;
-  background-color: #ffffff;
-  color: #1033d3;
-  border: 2px solid #1033d3;
-  font-size: 16px;
-  font-weight: 500;
-  border-radius: 12px;
-  text-transform: none;
-  margin-bottom: 24px;
-  transition: all 0.3s ease;
-}
-
-.register-container .back-btn:hover {
-  background-color: #f8f9ff;
-}
-
-.button-group {
   display: flex;
-  justify-content: space-between;
-  gap: 12px;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.button-group .register-btn {
-  width: 48%;
-  margin-bottom: 0;
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-/* Sección de enlaces */
-.links-section {
-  text-align: center;
-}
-
-.login-text {
+.form-group label {
   font-size: 14px;
-  color: #666666;
-  margin: 0;
+  color: #666;
+  font-weight: 400;
 }
 
-.login-link {
-  color: #1033d3;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s ease;
+.form-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+  box-sizing: border-box;
 }
 
-.login-link:hover {
-  color: #0d2bb8;
+.form-group input:focus {
+  outline: none;
+  border-color: #aec5b5;
+}
+
+.error-message {
+  font-size: 12px;
+  color: #d32f2f;
+  margin-top: 4px;
+}
+
+/* Checkboxes */
+.checkbox-group {
+  margin-top: 5px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* Privacy text */
+.privacy-text {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #666;
+  margin-top: 10px;
+}
+
+.privacy-link {
+  color: #aec5b5;
   text-decoration: underline;
 }
 
-/* Responsive */
-@media (max-width: 767px) {
-  .register-container {
-    padding: 32px 24px;
-    max-width: 100%;
-  }
-
-  .register-form {
-    max-width: 100%;
-  }
-
-  .brand-title {
-    font-size: 1.75rem;
-  }
-
-  .register-container .register-btn,
-  .register-container .back-btn {
-    height: 44px;
-  }
-
-  .step {
-    width: 28px;
-    height: 28px;
-  }
-
-  .step-number {
-    font-size: 12px;
-  }
-
-  .step-line {
-    width: 40px;
-  }
+/* Botones */
+.btn-register {
+  width: 100%;
+  padding: 14px;
+  background-color: #aec5b5;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 10px;
 }
 
-@media (min-width: 768px) {
+.btn-register:hover:not(:disabled) {
+  background-color: #9ab3a4;
+}
+
+.btn-register:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.btn-login {
+  padding: 14px 40px;
+  background-color: #a89380;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 20px;
+}
+
+.btn-login:hover {
+  background-color: #957f6d;
+}
+
+/* Sección de login */
+.login-description {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
   .register-container {
-    min-height: auto;
-    margin: 100px auto;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(16, 51, 211, 0.1);
+    flex-direction: column;
+  }
+
+  .register-section {
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .register-section,
+  .login-section {
+    padding: 40px 30px;
   }
 }
