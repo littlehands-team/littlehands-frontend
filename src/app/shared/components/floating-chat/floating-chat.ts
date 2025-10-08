@@ -20,7 +20,7 @@ export class FloatingChat {
   userMessage = '';
   messages: Message[] = [
     {
-      text: 'Hola! Soy Alma. Antes de ayudarte, por favor ingresa tu DNI.',
+      text: 'Hola! en que puedo ayudarte?.',
       isBot: true,
       timestamp: new Date()
     }
@@ -47,7 +47,7 @@ export class FloatingChat {
         let botResponse = '';
 
         if (userMsg.match(/^\d{8}$/)) {
-          botResponse = 'Gracias por proporcionar tu DNI. ¿En qué puedo ayudarte hoy?';
+          botResponse = '¿En qué puedo ayudarte hoy?';
         } else if (userMsg.includes('horario') || userMsg.includes('hora')) {
           botResponse = 'Nuestro horario de atención es de Lunes a Viernes de 8:00 AM a 6:00 PM.';
         } else if (userMsg.includes('pedido') || userMsg.includes('orden')) {
