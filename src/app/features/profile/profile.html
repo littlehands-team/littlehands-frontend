@@ -1,1 +1,95 @@
-<p>profile works!</p>
+<div class="profile-container">
+  <h1 class="profile-title">MI CUENTA</h1>
+
+  <div class="profile-content">
+    <!-- Sidebar Menu -->
+    <aside class="profile-sidebar">
+      <div class="sidebar-title">MI CUENTA</div>
+
+      <button
+        class="sidebar-item"
+        [class.active]="activeSection === 'orders'"
+        (click)="setActiveSection('orders')">
+        ▸ MIS PEDIDOS
+      </button>
+
+      <button
+        class="sidebar-item"
+        [class.active]="activeSection === 'account'"
+        (click)="setActiveSection('account')">
+        ▸ PANEL DE CONTROL
+      </button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="profile-main">
+      <!-- Account Information Section -->
+      <div *ngIf="activeSection === 'account'" class="account-section">
+        <h2 class="section-title">MI CUENTA</h2>
+
+        <div class="info-card">
+          <h3 class="card-subtitle">INFORMACIÓN DE LA CUENTA</h3>
+
+          <div class="info-group">
+            <p class="info-label">Información del contacto</p>
+            <p class="info-value">{{ userInfo.firstName }} {{ userInfo.lastName }}</p>
+            <p class="info-value">{{ userInfo.email }}</p>
+
+            <div class="action-links">
+              <button class="link-button" (click)="onEdit()">Editar</button>
+              <span class="separator">|</span>
+              <button class="link-button" (click)="onChangePassword()">Cambiar la contraseña</button>
+            </div>
+          </div>
+
+          <div class="info-group">
+            <h4 class="subsection-title">LIBRETA DE DIRECCIONES</h4>
+            <button class="manage-button">GESTIONAR DIRECCIONES</button>
+
+            <div class="address-columns">
+              <div class="address-column">
+                <p class="address-label">Dirección de facturación por defecto</p>
+                <p class="address-text">No ha establecido una dirección de facturación predeterminada.</p>
+                <button class="link-button">Editar dirección</button>
+              </div>
+
+              <div class="address-column">
+                <p class="address-label">Dirección de envío predeterminada</p>
+                <p class="address-text">No ha establecido una dirección de envío predeterminada.</p>
+                <button class="link-button">Editar dirección</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orders Section -->
+      <div *ngIf="activeSection === 'orders'" class="orders-section">
+        <h2 class="section-title">MIS PEDIDOS</h2>
+
+        <div class="orders-list">
+          <div *ngFor="let order of orders" class="order-card">
+            <div class="order-header">
+              <span class="order-id">Pedido {{ order.id }}</span>
+              <span class="order-status" [class]="'status-' + order.status">
+                {{ getStatusText(order.status) }}
+              </span>
+            </div>
+
+            <div class="order-details">
+              <p class="order-date">{{ order.date }}</p>
+              <p class="order-items">{{ order.items }} artículos</p>
+              <p class="order-total">Total: S/ {{ order.total.toFixed(2) }}</p>
+            </div>
+
+            <button class="view-order-button">Ver detalles</button>
+          </div>
+
+          <div *ngIf="orders.length === 0" class="empty-orders">
+            <p>No tienes pedidos aún.</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

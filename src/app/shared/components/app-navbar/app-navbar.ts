@@ -10,7 +10,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatBadgeModule } from '@angular/material/badge';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-
+import {CryptoService} from '../../../core/services/crypto.service';
 
 
 @Component({
@@ -36,7 +36,7 @@ export class AppNavbar {
   menuOpened = false;
   searchQuery = '';
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private cryptoService: CryptoService) { }
 
   onSearch() {
     console.log('Buscando:', this.searchQuery);
@@ -44,7 +44,12 @@ export class AppNavbar {
   }
 
   goToAccount() {
-    this.router.navigate(['/auth/login']);
+    if(this.cryptoService.isUserLogged()){
+      this.router.navigate(['/perfil']);
+    }else {
+      this.router.navigate(['/auth/login']);
+    }
+
   }
 
   goToCart() {

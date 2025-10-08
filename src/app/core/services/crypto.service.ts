@@ -27,11 +27,17 @@ export class CryptoService {
   }
 
   getCurrentUserId(): number | null {
-    const encryptedUser = localStorage.getItem('mm-current-user');
+    const encryptedUser = localStorage.getItem('hh-current-user');
     if (!encryptedUser) return null;
 
     const currentUser = this.decrypt<{ token: string; user: { id: number } }>(encryptedUser);
     return currentUser?.user?.id ?? null;
   }
+
+  isUserLogged(): boolean {
+    const encryptedUser = localStorage.getItem('hh-current-user');
+    return !!encryptedUser; // true if exists, false if null
+  }
+
 
 }

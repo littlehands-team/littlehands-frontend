@@ -37,13 +37,13 @@ export class UserService {
 
   // Login
   login(credentials: { email: string; password: string }): Observable<ApiResponse<{ token: string, user: User }>> {
-    return this.http.post<any>(`${this.apiUrl}/users/login/`, credentials).pipe(
+    return this.http.post<any>(`${this.apiUrl}/login/`, credentials).pipe(
       map((response) => {
         if (response && response.token && response.user) {
 
           // Guardamos data en el localstorage
           const currentUser = { token: response.token, user: response.user };
-          localStorage.setItem('mm-current-user', this.crypto.encrypt(currentUser));
+          localStorage.setItem('hh-current-user', this.crypto.encrypt(currentUser));
 
           return {
             success: true,

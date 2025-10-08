@@ -1,0 +1,405 @@
+.profile-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.profile-title {
+  font-size: 2rem;
+  font-weight: 500;
+  text-align: center;
+  letter-spacing: 8px;
+  margin-bottom: 40px;
+  color: #333;
+  position: relative;
+}
+
+.profile-content {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+/* Sidebar */
+.profile-sidebar {
+  flex: 0 0 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 20px;
+}
+
+.sidebar-title {
+  background-color: #f5b544;
+  padding: 15px 20px;
+  text-align: left;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: white;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.sidebar-item {
+  background-color: #f9f9f9;
+  border: none;
+  padding: 15px 20px;
+  text-align: left;
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #666;
+  border-bottom: 1px solid #e0e0e0;
+  position: relative;
+}
+
+.sidebar-item:last-child {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  border-bottom: none;
+}
+
+.sidebar-item:hover {
+  background-color: #fff;
+  color: #333;
+  padding-left: 25px;
+}
+
+.sidebar-item.active {
+  background-color: #fff;
+  color: #f5b544;
+  font-weight: 600;
+  border-left: 4px solid #f5b544;
+  padding-left: 21px;
+}
+
+/* Main Content */
+.profile-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  margin-bottom: 30px;
+  color: #333;
+  background-color: #f5b544;
+  padding: 15px 20px;
+  border-radius: 4px;
+  color: white;
+}
+
+/* Account Section */
+.info-card {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 30px;
+}
+
+.card-subtitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  margin-bottom: 25px;
+  color: #f5b544;
+}
+
+.info-group {
+  margin-bottom: 40px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.info-group:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.info-value {
+  color: #333;
+  margin: 5px 0;
+}
+
+.action-links {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: #f5b544;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  padding: 0;
+  transition: color 0.3s ease;
+}
+
+.link-button:hover {
+  color: #aec5b5;
+  text-decoration: underline;
+}
+
+.separator {
+  color: #ccc;
+}
+
+.subsection-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  color: #f5b544;
+}
+
+.manage-button {
+  background-color: #f5b544;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  margin-bottom: 25px;
+}
+
+.manage-button:hover {
+  background-color: #aec5b5;
+}
+
+.address-columns {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+}
+
+.address-column {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+.address-label {
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.address-text {
+  color: #666;
+  margin-bottom: 15px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Orders Section */
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.order-card {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 25px;
+  transition: box-shadow 0.3s ease;
+}
+
+.order-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.order-id {
+  font-weight: 600;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.order-status {
+  padding: 6px 15px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status-completed {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-cancelled {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.order-details {
+  margin-bottom: 20px;
+}
+
+.order-date,
+.order-items,
+.order-total {
+  color: #666;
+  margin: 8px 0;
+}
+
+.order-total {
+  font-weight: 600;
+  color: #333;
+  font-size: 1.05rem;
+}
+
+.view-order-button {
+  background-color: #aec5b5;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.view-order-button:hover {
+  background-color: #9bb5a5;
+}
+
+.empty-orders {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+  font-size: 1.1rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 20px 10px;
+  }
+
+  .profile-content {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .profile-sidebar {
+    flex: 1;
+    width: 100%;
+  }
+
+  .profile-main {
+    width: 100%;
+  }
+
+  .account-section{
+    width: 100%;
+  }
+
+  .section-title {
+    border-radius: 0;
+  }
+
+  .info-card,
+  .orders-list,
+  .order-card {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .profile-title::before,
+  .profile-title::after {
+    width: 40px;
+  }
+
+  .profile-title::before {
+    left: calc(50% - 140px);
+  }
+
+  .profile-title::after {
+    right: calc(50% - 140px);
+  }
+
+  .address-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .info-card {
+    padding: 20px;
+  }
+
+  .order-card {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-title {
+    font-size: 1.5rem;
+    letter-spacing: 4px;
+  }
+
+  .profile-title::before,
+  .profile-title::after {
+    width: 30px;
+  }
+
+  .profile-title::before {
+    left: 10px;
+  }
+
+  .profile-title::after {
+    right: 10px;
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+  }
+
+  .action-links {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .separator {
+    display: none;
+  }
+}
