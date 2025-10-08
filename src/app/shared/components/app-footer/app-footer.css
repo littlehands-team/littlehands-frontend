@@ -20,11 +20,12 @@
 .footer-column {
   flex: 1;
   min-width: 200px;
+  padding-left: 100px;
 }
 
 /* Logo */
 .footer-logo {
-  height: 80px;
+  height: 60px;
   object-fit: contain;
   filter: brightness(0) invert(1);
 }
@@ -102,11 +103,13 @@
 @media (max-width: 768px) {
   .footer-container {
     flex-direction: column;
-    gap: 30px;
+    gap: 10px;
   }
 
   .footer-column {
     min-width: 100%;
+    padding-left: 0;
+    text-align: center;
   }
 
   .footer-logo {
@@ -114,6 +117,7 @@
   }
 
   .social-links {
-    justify-content: flex-start;
+    justify-content: center;
   }
+
 }
