@@ -1,12 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-interface Message {
-  text: string;
-  isBot: boolean;
-  timestamp: Date;
-}
+import { ChatService } from '../../../core/services/chat.service';
+import { Message} from '../../models/message.model';
 
 @Component({
   selector: 'app-floating-chat',
@@ -18,52 +14,55 @@ interface Message {
 export class FloatingChat {
   isOpen = false;
   userMessage = '';
+  isLoading = false;
   messages: Message[] = [
     {
-      text: 'Hola! en que puedo ayudarte?.',
+      text: 'Hola! ¿En qué puedo ayudarte?',
       isBot: true,
       timestamp: new Date()
     }
   ];
+
+  constructor(private chatService: ChatService) {}
 
   toggleChat(): void {
     this.isOpen = !this.isOpen;
   }
 
   sendMessage(): void {
-    if (this.userMessage.trim()) {
+    if (this.userMessage.trim() && !this.isLoading) {
+      const userMsg = this.userMessage;
+
       // Agregar mensaje del usuario
       this.messages.push({
-        text: this.userMessage,
+        text: userMsg,
         isBot: false,
         timestamp: new Date()
       });
 
-      const userMsg = this.userMessage.toLowerCase();
       this.userMessage = '';
+      this.isLoading = true;
 
-      // Simular respuesta del bot
-      setTimeout(() => {
-        let botResponse = '';
-
-        if (userMsg.match(/^\d{8}$/)) {
-          botResponse = '¿En qué puedo ayudarte hoy?';
-        } else if (userMsg.includes('horario') || userMsg.includes('hora')) {
-          botResponse = 'Nuestro horario de atención es de Lunes a Viernes de 8:00 AM a 6:00 PM.';
-        } else if (userMsg.includes('pedido') || userMsg.includes('orden')) {
-          botResponse = 'Puedes revisar tus pedidos en la sección "Mis Pedidos" de tu cuenta.';
-        } else if (userMsg.includes('ayuda') || userMsg.includes('hola')) {
-          botResponse = '¡Hola! Estoy aquí para ayudarte. ¿Qué necesitas?';
-        } else {
-          botResponse = 'Entiendo. Un representante se comunicará contigo pronto. ¿Hay algo más en lo que pueda ayudarte?';
+      // Llamar al servicio de chat
+      this.chatService.sendMessage(userMsg, this.messages).subscribe({
+        next: (botResponse) => {
+          this.messages.push({
+            text: botResponse,
+            isBot: true,
+            timestamp: new Date()
+          });
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error al enviar mensaje:', error);
+          this.messages.push({
+            text: 'Lo siento, hubo un error al procesar tu mensaje. Por favor, intenta nuevamente.',
+            isBot: true,
+            timestamp: new Date()
+          });
+          this.isLoading = false;
         }
-
-        this.messages.push({
-          text: botResponse,
-          isBot: true,
-          timestamp: new Date()
-        });
-      }, 1000);
+      });
     }
   }
 
