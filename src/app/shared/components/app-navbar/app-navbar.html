@@ -77,7 +77,7 @@
       </button>
 
       <!-- Usuario -->
-      <button mat-icon-button (click)="goToAccount()">
+      <button mat-icon-button (click)="goToAccount()" routerLinkActive="active-link">
         <mat-icon>person</mat-icon>
       </button>
 
@@ -107,10 +107,10 @@
       </div>
 
       <nav class="menu-nav">
-        <button routerLink="/nosotros" (click)="closeMenu()">
+        <button routerLink="/nosotros" (click)="closeMenu()" routerLinkActive="active-link">
           <span>NOSOTROS</span>
         </button>
-        <button routerLink="/tienda" (click)="closeMenu()">
+        <button routerLink="/tienda" (click)="closeMenu()" routerLinkActive="active-link">
           <span>TIENDA</span>
         </button>
       </nav>

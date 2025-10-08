@@ -146,6 +146,10 @@ html, body {
   color: #aec5b5;
 }
 
+.menu-nav button.active-link {
+  color: #aec5b5;
+}
+
 /* mobile header default hidden */
 .mobile-header {
   display: none;
