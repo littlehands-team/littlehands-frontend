@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, FormsModule } from '@angular/forms';
 import { UserService } from '../../../core/services/user.service';
 import { RegisterRequest } from '../../../shared/models/register-request.model';
-import { NgToastService } from 'ng-angular-popup';
+import {NgToastComponent, NgToastService} from 'ng-angular-popup';
 
 @Component({
   selector: 'app-register',
@@ -12,7 +12,8 @@ import { NgToastService } from 'ng-angular-popup';
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    RouterLink
+    RouterLink,
+    NgToastComponent
   ],
   templateUrl: './register.html',
   styleUrl: './register.css'
@@ -36,6 +37,8 @@ export class Register {
     }, {
       validators: this.passwordMatchValidator
     });
+    this.toast.success("response.message", 'Registro exitoso', 3000);
+    console.log("AAAAAAAAAAAAAAAAAAAAAAA")
   }
 
   passwordMatchValidator(formGroup: AbstractControl) {
