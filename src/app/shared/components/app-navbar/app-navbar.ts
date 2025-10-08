@@ -50,6 +50,7 @@ export class AppNavbar {
   }
 
   toggleMenu() {
+    console.log('Buscando:', this.menuOpened);
     this.menuOpened = !this.menuOpened;
   }
 

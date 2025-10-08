@@ -89,11 +89,11 @@
 </header>
 
 <!-- Mobile Menu Sidenav -->
-<mat-sidenav-container class="mobile-menu-container" autosize>
+<mat-sidenav-container class="mobile-menu-container" [class.menu-open]="menuOpened" autosize>
   <mat-sidenav
     #sidenav
     mode="over"
-    position="end"
+    position="start"
     [opened]="menuOpened"
     (closed)="closeMenu()"
     class="mobile-sidenav">
@@ -106,10 +106,10 @@
       </div>
 
       <nav class="menu-nav">
-        <button mat-button routerLink="/nosotros" (click)="closeMenu()">
+        <button routerLink="/nosotros" (click)="closeMenu()">
           <span>NOSOTROS</span>
         </button>
-        <button mat-button routerLink="/tienda" (click)="closeMenu()">
+        <button routerLink="/tienda" (click)="closeMenu()">
           <span>TIENDA</span>
         </button>
       </nav>
@@ -117,11 +117,11 @@
       <div class="menu-social">
         <h3>Síguenos</h3>
         <a href="https://instagram.com" target="_blank" class="menu-social-link">
-          <mat-icon>instagram</mat-icon>
+          <i class="fab fa-instagram"></i>
           <span>Instagram</span>
         </a>
         <a href="https://tiktok.com" target="_blank" class="menu-social-link">
-          <mat-icon>music_note</mat-icon>
+          <i class="fab fa-tiktok"></i>
           <span>TikTok</span>
         </a>
       </div>
