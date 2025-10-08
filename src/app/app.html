@@ -1,4 +1,10 @@
-<app-app-navbar></app-app-navbar>
-<router-outlet></router-outlet>
-<ng-toast></ng-toast>
-<app-app-footer></app-app-footer>
+<div class="app-layout">
+  <app-app-navbar></app-app-navbar>
+
+  <main class="app-content">
+    <router-outlet></router-outlet>
+    <ng-toast></ng-toast>
+  </main>
+
+  <app-app-footer></app-app-footer>
+</div>

@@ -9,7 +9,7 @@ export const routes: Routes = [
   { path: 'tienda', component: Shop },
   { path: 'perfil', component: Profile },
   { path: 'nosotros', component: About },
-  { path: 'login', component: Login },
-  { path: 'register', component: Register },
+  { path: 'auth/login', component: Login },
+  { path: 'auth/register', component: Register },
   { path: '', redirectTo: 'nosotros', pathMatch: 'full' }, // default después del login
 ];

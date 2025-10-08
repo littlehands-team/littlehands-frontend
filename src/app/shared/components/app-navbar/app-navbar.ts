@@ -1,22 +1,59 @@
 import { Component } from '@angular/core';
-import {MatToolbar} from '@angular/material/toolbar';
-import {MatIconModule} from '@angular/material/icon';
-import {MatButton} from '@angular/material/button';
-import {RouterLink, RouterLinkActive} from '@angular/router';
-import {NgClass} from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatBadgeModule } from '@angular/material/badge';
+import { FormsModule } from '@angular/forms';
+
 
 @Component({
   selector: 'app-app-navbar',
+  standalone: true,
   imports: [
-    MatToolbar,
+    CommonModule,
+    RouterModule,
+    MatToolbarModule,
+    MatButtonModule,
     MatIconModule,
-    MatButton,
-    RouterLink,
-    RouterLinkActive
+    MatInputModule,
+    MatFormFieldModule,
+    MatSidenavModule,
+    MatBadgeModule,
+    FormsModule
   ],
   templateUrl: './app-navbar.html',
   styleUrl: './app-navbar.css'
 })
 export class AppNavbar {
+  cartItemsCount = 3; // Esto debería venir de un servicio
+  menuOpened = false;
+  searchQuery = '';
 
+  onSearch() {
+    console.log('Buscando:', this.searchQuery);
+    // Implementar lógica de búsqueda
+  }
+
+  goToAccount() {
+    console.log('Ir a cuenta');
+    // Navegar a la página de cuenta
+  }
+
+  goToCart() {
+    console.log('Ir al carrito');
+    // Navegar al carrito
+  }
+
+  toggleMenu() {
+    this.menuOpened = !this.menuOpened;
+  }
+
+  closeMenu() {
+    this.menuOpened = false;
+  }
 }

@@ -1,12 +1,130 @@
-<!-- Desktop Toolbar -->
-<div class="desktop-toolbar-container">
-  <mat-toolbar color="primary" class="desktop-toolbar">
-    <span class="brand-name">MoneyMind</span>
-    <span class="spacer"></span>
+<header class="header-wrapper">
+  <!-- DESKTOP VERSION -->
+  <div class="desktop-header">
+    <!-- Primera fila -->
+    <div class="top-row">
+      <div class="top-row-content">
+        <!-- Logo -->
+        <div class="logo-section">
+          <img src="horizontal_logo.png" alt="LittleHands Logo" class="logo" routerLink="/">
+        </div>
 
-    <button mat-button routerLink="/home" routerLinkActive="active-desktop">Inicio</button>
-    <button mat-button routerLink="/scan" routerLinkActive="active-desktop" [routerLinkActiveOptions]="{ exact: false }">Escanear</button>
-    <button mat-button routerLink="/dashboard" routerLinkActive="active-desktop">Análisis</button>
-    <button mat-button routerLink="/profile" routerLinkActive="active-desktop">Perfil</button>
-  </mat-toolbar>
-</div>
+        <!-- Redes sociales -->
+        <div class="social-section">
+          <a href="https://instagram.com" target="_blank" class="social-link">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="https://tiktok.com" target="_blank" class="social-link">
+            <i class="fab fa-tiktok"></i>
+          </a>
+        </div>
+
+        <!-- Barra de búsqueda -->
+        <div class="search-section">
+          <mat-form-field appearance="outline" class="search-field">
+            <input
+              matInput
+              placeholder="¿QUÉ BUSCAS?"
+              [(ngModel)]="searchQuery"
+              (keyup.enter)="onSearch()">
+            <button mat-icon-button matSuffix (click)="onSearch()">
+              <mat-icon>search</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+
+        <!-- Cuenta -->
+        <div class="account-section" (click)="goToAccount()">
+          <mat-icon class="account-icon">person_add</mat-icon>
+          <span class="account-text">CUENTA</span>
+        </div>
+
+        <!-- Carrito -->
+        <div class="cart-section" (click)="goToCart()">
+          <mat-icon class="cart-icon" [matBadge]="cartItemsCount" matBadgeColor="warn">shopping_cart</mat-icon>
+        </div>
+      </div>
+
+
+    </div>
+
+    <!-- Segunda fila: Navegación -->
+    <nav class="nav-row">
+      <div class="nav-row-content">
+        <button routerLink="/nosotros" routerLinkActive="active-link">NOSOTROS</button>
+        <button routerLink="/tienda" routerLinkActive="active-link">TIENDA</button>
+      </div>
+    </nav>
+  </div>
+
+  <!-- MOBILE VERSION -->
+  <div class="mobile-header">
+    <mat-toolbar color="primary">
+      <!-- Menu hamburguesa -->
+      <button mat-icon-button (click)="toggleMenu()">
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <!-- Logo texto -->
+      <span class="mobile-brand">LittleHands</span>
+
+      <span class="mobile-spacer"></span>
+
+      <!-- Búsqueda -->
+      <button mat-icon-button>
+        <mat-icon>search</mat-icon>
+      </button>
+
+      <!-- Usuario -->
+      <button mat-icon-button (click)="goToAccount()">
+        <mat-icon>person</mat-icon>
+      </button>
+
+      <!-- Carrito -->
+      <button mat-icon-button (click)="goToCart()">
+        <mat-icon [matBadge]="cartItemsCount" matBadgeColor="warn" matBadgeSize="small">shopping_cart</mat-icon>
+      </button>
+    </mat-toolbar>
+  </div>
+</header>
+
+<!-- Mobile Menu Sidenav -->
+<mat-sidenav-container class="mobile-menu-container" autosize>
+  <mat-sidenav
+    #sidenav
+    mode="over"
+    position="end"
+    [opened]="menuOpened"
+    (closed)="closeMenu()"
+    class="mobile-sidenav">
+
+    <div class="mobile-menu">
+      <div class="menu-header">
+        <button mat-icon-button (click)="closeMenu()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <nav class="menu-nav">
+        <button mat-button routerLink="/nosotros" (click)="closeMenu()">
+          <span>NOSOTROS</span>
+        </button>
+        <button mat-button routerLink="/tienda" (click)="closeMenu()">
+          <span>TIENDA</span>
+        </button>
+      </nav>
+
+      <div class="menu-social">
+        <h3>Síguenos</h3>
+        <a href="https://instagram.com" target="_blank" class="menu-social-link">
+          <mat-icon>instagram</mat-icon>
+          <span>Instagram</span>
+        </a>
+        <a href="https://tiktok.com" target="_blank" class="menu-social-link">
+          <mat-icon>music_note</mat-icon>
+          <span>TikTok</span>
+        </a>
+      </div>
+    </div>
+  </mat-sidenav>
+</mat-sidenav-container>
