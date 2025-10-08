@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { UserService} from '../../core/services/user.service';
+import { Router } from '@angular/router';
+import {CryptoService} from '../../core/services/crypto.service';
 
 interface Order {
   id: string;
@@ -50,6 +53,8 @@ export class Profile {
     }
   ];
 
+  constructor(private router: Router, private userService: UserService) { }
+
   setActiveSection(section: 'orders' | 'account'): void {
     this.activeSection = section;
   }
@@ -71,5 +76,14 @@ export class Profile {
   onChangePassword(): void {
     console.log('Cambiar contraseña');
     // Implementar lógica de cambio de contraseña
+  }
+
+  logOut() {
+    //this.userService.logout()
+    // Limpia el token
+    localStorage.removeItem('hh-current-user');
+
+    // Redirigir al login
+    this.router.navigate(['/auth/login']);
   }
 }

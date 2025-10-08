@@ -30,7 +30,7 @@
 }
 
 .sidebar-title {
-  background-color: #f5b544;
+  background-color: #aec5b5;
   padding: 15px 20px;
   text-align: left;
   font-size: 0.95rem;
@@ -70,9 +70,9 @@
 
 .sidebar-item.active {
   background-color: #fff;
-  color: #f5b544;
+  color: #aec5b5;
   font-weight: 600;
-  border-left: 4px solid #f5b544;
+  border-left: 4px solid #aec5b5;
   padding-left: 21px;
 }
 
@@ -88,7 +88,7 @@
   letter-spacing: 2px;
   margin-bottom: 30px;
   color: #333;
-  background-color: #f5b544;
+  background-color: #aec5b5;
   padding: 15px 20px;
   border-radius: 4px;
   color: white;
@@ -107,7 +107,7 @@
   font-weight: 600;
   letter-spacing: 1.5px;
   margin-bottom: 25px;
-  color: #f5b544;
+  color: #aec5b5;
 }
 
 .info-group {
@@ -143,7 +143,7 @@
 .link-button {
   background: none;
   border: none;
-  color: #f5b544;
+  color: #aec5b5;
   text-decoration: none;
   cursor: pointer;
   font-size: 0.95rem;
@@ -165,11 +165,11 @@
   font-weight: 600;
   letter-spacing: 1px;
   margin-bottom: 20px;
-  color: #f5b544;
+  color: #aec5b5;
 }
 
 .manage-button {
-  background-color: #f5b544;
+  background-color: #aec5b5;
   color: white;
   border: none;
   padding: 10px 25px;
