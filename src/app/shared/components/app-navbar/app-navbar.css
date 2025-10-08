@@ -21,24 +21,28 @@ html, body {
 
 .top-row {
   width: 100%;
-  background-color: #fffef7;
+  background-color: #ffffff;
   display: flex;
   justify-content: center;
   padding: 16px 0;
 }
 
 .top-row-content {
-  align-items: center;
   display: flex;
-  justify-content: space-between;
-  gap: 24px;
+  align-items: center;
   width: 1224px;
   max-width: calc(100% - 32px);
   padding: 0 16px;
   box-sizing: border-box;
+  gap: 24px;
 }
 
 /* logo */
+.logo-section {
+  display: flex;
+  align-items: center;
+}
+
 .logo-section .logo {
   height: 60px;
   cursor: pointer;
@@ -49,7 +53,9 @@ html, body {
 .social-section {
   display: flex;
   gap: 8px;
+  align-items: center;
 }
+
 .social-section .social-link {
   display: flex;
   align-items: center;
@@ -60,20 +66,24 @@ html, body {
 }
 .social-section .social-link:hover { color: #aec5b5; }
 .social-section .social-link i {
-  font-size: 24px;
+  font-size: 20px;
   width: 24px;
   height: 24px;
+  margin-right: 16px;
 }
 
 /* search */
 .search-section {
   flex: 1;
   max-width: 500px;
+  margin: 0 auto;
+  margin-bottom: -20px;
 }
 .search-field {
   width: 100%;
-  margin-bottom: 0;
+  font-size: 13px;
 }
+
 
 /* account */
 .account-section {
@@ -82,13 +92,21 @@ html, body {
   gap: 8px;
   cursor: pointer;
   transition: color .3s;
+  margin-left: auto;
 }
 .account-section:hover { color: #aec5b5; }
 .account-section .account-icon { font-size: 24px; width:24px; height:24px;}
 .account-section .account-text { font-size:14px; font-weight:500; }
 
 /* cart */
-.cart-section { display:flex; align-items:center; cursor:pointer; position:relative; }
+.cart-section {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  margin-left: 8px;
+}
+
 .cart-section .cart-icon { font-size:28px; width:28px; height:28px; transition:color .3s; }
 .cart-section .cart-icon:hover { color: #E91E63; }
 
@@ -98,8 +116,8 @@ html, body {
   justify-content: center;
   gap: 8px;
   padding: 16px 0;
-  border-top: 2px solid #efefef;
-  background-color: #fbfeff;
+  border-top: 2px solid #e3e3e3;
+  background-color: #ffffff;
 }
 .nav-row-content {
   width: 1224px;
