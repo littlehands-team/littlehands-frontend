@@ -118,6 +118,7 @@ html, body {
   padding: 16px 0;
   border-top: 2px solid #e3e3e3;
   background-color: #ffffff;
+  border-bottom: 2px solid #e3e3e3;
 }
 .nav-row-content {
   width: 1224px;

@@ -6,9 +6,10 @@ html, body {
 .app-layout {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* 👈 asegura que ocupe toda la pantalla */
+  min-height: 100vh; /* asegura que ocupe toda la pantalla */
 }
 
 .app-content {
-  flex: 1; /* 👈 empuja el footer hacia abajo */
+  flex: 1; /* empuja el footer hacia abajo */
+  background-color: transparent;
 }
