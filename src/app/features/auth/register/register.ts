@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, FormsModule } from '@angular/forms';
 import { UserService } from '../../../core/services/user.service';
 import { RegisterRequest } from '../../../shared/models/register-request.model';
 import {NgToastComponent, NgToastService} from 'ng-angular-popup';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-register',
@@ -21,6 +22,7 @@ import {NgToastComponent, NgToastService} from 'ng-angular-popup';
 export class Register {
   registerForm: FormGroup;
   showPassword: boolean = false;
+  private _snackBar = inject(MatSnackBar);
 
   constructor(
     private fb: FormBuilder,
@@ -78,10 +80,18 @@ export class Register {
         if (response.success) {
           this.toast.success(response.message, 'Registro exitoso', 3000);
           this.router.navigate(['/auth/login']);
+          this.openSnackBar();
         } else {
           this.toast.danger(response.message, 'Error', 3000);
         }
       });
     }
+  }
+  openSnackBar() {
+    this._snackBar.open('Usuario registrado existosamente', 'Cerrar',{
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+      duration: 3000,
+    });
   }
 }
