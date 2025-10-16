@@ -142,11 +142,38 @@ export class Shop implements OnInit {
   toggleAgeFilter() {
     this.ageFilterOpen = !this.ageFilterOpen;
   }
-
+  
   // Ordenamiento
   onSortChange() {
-    // TODO: Implementar ordenamiento en backend
-    console.log('Sort by:', this.sortBy);
+    switch (this.sortBy) {
+      case 'price-asc':
+        // Precio: menor a mayor (precio final)
+        this.products.sort((a, b) => {
+          const priceA = parseFloat(this.calculateFinalPrice(a));
+          const priceB = parseFloat(this.calculateFinalPrice(b));
+          return priceA - priceB;
+        });
+        break;
+
+      case 'price-desc':
+        // Precio: mayor a menor (precio final)
+        this.products.sort((a, b) => {
+          const priceA = parseFloat(this.calculateFinalPrice(a));
+          const priceB = parseFloat(this.calculateFinalPrice(b));
+          return priceB - priceA;
+        });
+        break;
+
+      case 'recent':
+      default:
+        // Más recientes (por created_at)
+        this.products.sort((a, b) => {
+          const dateA = new Date(a.created_at || 0).getTime();
+          const dateB = new Date(b.created_at || 0).getTime();
+          return dateB - dateA;
+        });
+        break;
+    }
   }
 
   // Calcular precio final
