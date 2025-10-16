@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import { environment } from './environment';
 import { Product } from '../../shared/models/product.model';
-import { User } from '../../shared/models/user.model';
+import { ProductShopResponse } from '../../shared/models/product-shop-response.model';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { CryptoService } from './crypto.service';
@@ -20,6 +20,37 @@ export class ProductService {
       catchError((error) => {
         console.error('Error al obtener productos:', error);
         return of([]);
+      })
+    );
+  }
+
+  getShopProducts(
+    page: number = 1,
+    pageSize: number = 10,
+    minPrice?: number,
+    maxPrice?: number,
+    ages?: string[]
+  ): Observable<ProductShopResponse | null> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('page_size', pageSize.toString());
+
+    if (minPrice !== undefined && minPrice !== null) {
+      params = params.set('min_price', minPrice.toString());
+    }
+
+    if (maxPrice !== undefined && maxPrice !== null) {
+      params = params.set('max_price', maxPrice.toString());
+    }
+
+    if (ages && ages.length > 0) {
+      params = params.set('ages', ages.join(','));
+    }
+
+    return this.http.get<ProductShopResponse>(`${this.apiUrl}/shop/products/`, { params }).pipe(
+      catchError((error) => {
+        console.error('Error al obtener productos de la tienda:', error);
+        return of(null);
       })
     );
   }

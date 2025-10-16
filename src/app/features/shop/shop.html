@@ -1,1 +1,161 @@
-<p>shop works!</p>
+<div class="shop-container">
+
+  <!-- Sidebar de filtros -->
+  <aside class="filters-sidebar">
+
+    <!-- Filtro de Precio -->
+    <div class="filter-section">
+      <div class="filter-header" (click)="togglePriceFilter()">
+        <h3>Precio</h3>
+        <mat-icon>{{ priceFilterOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
+      </div>
+
+      <div class="filter-content" *ngIf="priceFilterOpen">
+        <div class="price-range">
+          <div class="price-inputs">
+            <input
+              type="number"
+              [(ngModel)]="filters.minPrice"
+              [placeholder]="'0 €'"
+              (change)="applyFilters()" />
+            <span>-</span>
+            <input
+              type="number"
+              [(ngModel)]="filters.maxPrice"
+              [placeholder]="priceRange.max + ' €'"
+              (change)="applyFilters()" />
+          </div>
+
+          <div class="price-slider">
+            <mat-slider
+              [min]="priceRange.min"
+              [max]="priceRange.max"
+              [step]="1"
+              discrete>
+              <input
+                matSliderStartThumb
+                [(ngModel)]="filters.minPrice"
+                (change)="applyFilters()" />
+              <input
+                matSliderEndThumb
+                [(ngModel)]="filters.maxPrice"
+                (change)="applyFilters()" />
+            </mat-slider>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filtro de Edad -->
+    <div class="filter-section">
+      <div class="filter-header" (click)="toggleAgeFilter()">
+        <h3>Edad</h3>
+        <mat-icon>{{ ageFilterOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
+      </div>
+
+      <div class="filter-content" *ngIf="ageFilterOpen">
+        <div class="age-options">
+          <button
+            *ngFor="let age of ageCategories"
+            class="age-button"
+            [class.selected]="isAgeSelected(age)"
+            (click)="toggleAge(age)">
+            {{ age }}
+          </button>
+        </div>
+        <button class="see-more-btn" *ngIf="!showAllAges" (click)="showAllAges = true">
+          Ver menos
+        </button>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- Contenido principal -->
+  <main class="products-main">
+
+    <!-- Header con resultados y ordenamiento -->
+    <div class="products-header">
+      <h2 class="results-count">{{ totalProducts }} resultados</h2>
+      <div class="sort-section">
+        <label>Ordenados por:</label>
+        <select [(ngModel)]="sortBy" (change)="onSortChange()">
+          <option value="recent">Más recientes</option>
+          <option value="price-asc">Precio: Menor a Mayor</option>
+          <option value="price-desc">Precio: Mayor a Menor</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Grid de productos -->
+    <div class="products-grid" *ngIf="products.length > 0">
+      <div
+        *ngFor="let product of products"
+        class="product-card"
+        (click)="viewProductDetail(product)">
+
+        <!-- Badges superiores -->
+        <div class="product-badges">
+          <span class="age-badge">{{ product.age_category }}</span>
+          <span class="discount-badge" *ngIf="product.discount_percentage > 0">
+            OFERTA
+          </span>
+          <span class="discount-badge secondary" *ngIf="product.discount_percentage > 0">
+            -{{ product.discount_percentage }}%
+          </span>
+        </div>
+
+        <!-- Imagen -->
+        <div class="product-image">
+          <img [src]="product.image_url" [alt]="product.name" />
+        </div>
+
+        <!-- Info del producto -->
+        <div class="product-info">
+          <h3 class="product-name">{{ product.name }}</h3>
+
+          <div class="product-pricing">
+            <span class="original-price" *ngIf="product.discount_percentage > 0">
+              {{ product.price }} €
+            </span>
+            <span class="final-price">
+              {{ calculateFinalPrice(product) }} €
+            </span>
+          </div>
+
+          <!-- Botón de agregar al carrito -->
+          <button
+            class="add-to-cart-btn"
+            (click)="addToCart($event, product)">
+            <mat-icon>shopping_cart</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estado de carga -->
+    <div class="loading-state" *ngIf="loading">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Cargando productos...</p>
+    </div>
+
+    <!-- Sin resultados -->
+    <div class="empty-state" *ngIf="!loading && products.length === 0">
+      <mat-icon>search_off</mat-icon>
+      <h3>No se encontraron productos</h3>
+      <p>Intenta ajustar los filtros</p>
+      <button class="clear-filters-btn" (click)="clearFilters()">
+        Limpiar filtros
+      </button>
+    </div>
+
+    <!-- Botón de cargar más -->
+    <div class="load-more-section" *ngIf="hasMore && !loading">
+      <button class="load-more-btn" (click)="loadMore()">
+        Cargar más productos
+      </button>
+    </div>
+
+  </main>
+
+</div>
