@@ -1,0 +1,50 @@
+export enum AgeCategory {
+  PLUS_0 = '+0',
+  PLUS_1 = '+1',
+  RANGE_1_3 = '1–3',
+  PLUS_2 = '+2',
+  PLUS_3 = '+3',
+  PLUS_4 = '+4',
+  PLUS_5 = '+5',
+  PLUS_6 = '+6',
+  PLUS_7 = '+7',
+  PLUS_8 = '+8',
+  PLUS_9 = '+9',
+  PLUS_10 = '+10',
+  PLUS_12 = '+12',
+  PLUS_14 = '+14',
+}
+
+export const AGE_CATEGORY_ORDER: AgeCategory[] = [
+  AgeCategory.PLUS_0,
+  AgeCategory.PLUS_1,
+  AgeCategory.RANGE_1_3,
+  AgeCategory.PLUS_2,
+  AgeCategory.PLUS_3,
+  AgeCategory.PLUS_4,
+  AgeCategory.PLUS_5,
+  AgeCategory.PLUS_6,
+  AgeCategory.PLUS_7,
+  AgeCategory.PLUS_8,
+  AgeCategory.PLUS_9,
+  AgeCategory.PLUS_10,
+  AgeCategory.PLUS_12,
+  AgeCategory.PLUS_14,
+];
+
+export const AgeCategoryLabels: Record<AgeCategory, string> = {
+  [AgeCategory.PLUS_0]: '+0',
+  [AgeCategory.PLUS_1]: '+1',
+  [AgeCategory.RANGE_1_3]: '1–3',
+  [AgeCategory.PLUS_2]: '+2',
+  [AgeCategory.PLUS_3]: '+3',
+  [AgeCategory.PLUS_4]: '+4',
+  [AgeCategory.PLUS_5]: '+5',
+  [AgeCategory.PLUS_6]: '+6',
+  [AgeCategory.PLUS_7]: '+7',
+  [AgeCategory.PLUS_8]: '+8',
+  [AgeCategory.PLUS_9]: '+9',
+  [AgeCategory.PLUS_10]: '+10',
+  [AgeCategory.PLUS_12]: '+12',
+  [AgeCategory.PLUS_14]: '+14'
+};

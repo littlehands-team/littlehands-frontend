@@ -10,6 +10,8 @@ import { ProductService } from '../../../core/services/product.service';
 import { CloudinaryService } from '../../../core/services/cloudinary.service';
 import { CryptoService } from '../../../core/services/crypto.service';
 import { NgToastService } from 'ng-angular-popup';
+import { AgeCategory, AgeCategoryLabels, AGE_CATEGORY_ORDER} from '../../../shared/enums/age.enum';
+
 
 @Component({
   selector: 'app-product-dialog',
@@ -31,6 +33,9 @@ export class ProductDialog implements OnInit {
   imagePreview: string | null = null;
   uploadingImage: boolean = false;
   imageSelected: File | null = null;
+  AgeCategory = AgeCategory;
+  ageCategories = AGE_CATEGORY_ORDER;
+  AgeCategoryLabels = AgeCategoryLabels;
 
   constructor(
     private fb: FormBuilder,
@@ -51,6 +56,7 @@ export class ProductDialog implements OnInit {
       discount_percentage: [0, [Validators.min(0), Validators.max(100)]],
       image_url: [''],
       youtube_links: this.fb.array([]),
+      age_category: [AgeCategory.PLUS_0, Validators.required],
       is_active: [true]
     });
   }
@@ -103,6 +109,7 @@ export class ProductDialog implements OnInit {
       price: product.price,
       discount_percentage: product.discount_percentage,
       image_url: product.image_url,
+      age_category: product.age_category,
       is_active: product.is_active
     });
 
@@ -204,6 +211,7 @@ export class ProductDialog implements OnInit {
       discount_percentage: parseFloat(formValue.discount_percentage),
       image_url: formValue.image_url,
       youtube_links: validVideos,
+      age_category: formValue.age_category,
       is_active: formValue.is_active
     };
 

@@ -49,6 +49,19 @@
       </div>
     </div>
 
+    <!-- Age Category -->
+    <div class="form-group">
+      <label for="age_category">Edad recomendada *</label>
+      <select id="age_category" formControlName="age_category">
+        <option *ngFor="let cat of ageCategories" [value]="cat">
+          {{ AgeCategoryLabels[cat] }}
+        </option>
+      </select>
+      <div class="error-message" *ngIf="productForm.get('age_category')?.touched && productForm.get('age_category')?.hasError('required')">
+        La categoría de edad es obligatoria
+      </div>
+    </div>
+
     <!-- Price and Discount -->
     <div class="form-row">
       <div class="form-group">

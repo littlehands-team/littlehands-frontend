@@ -59,6 +59,22 @@
   font-family: inherit;
 }
 
+.form-group select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+  background-color: #fff;
+}
+
+.form-group select:focus {
+  outline: none;
+  border-color: #aec5b5;
+}
+
 .char-count {
   display: block;
   text-align: right;
