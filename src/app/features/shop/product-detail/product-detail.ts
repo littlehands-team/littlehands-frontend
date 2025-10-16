@@ -5,12 +5,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ProductService} from '../../../core/services/product.service';
 import { Product} from '../../../shared/models/product.model';
+import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,RouterModule,MatIconModule],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.css'
 })
@@ -19,12 +22,16 @@ export class ProductDetail implements OnInit {
   loading: boolean = true;
   error: boolean = false;
 
+  // Productos recomendados
+  recommendedProducts: Product[] = [];
+  loadingRecommendations: boolean = false;
+
   // Para la imagen principal
   mainImageUrl: string = '';
 
   // Videos de YouTube embebidos
   youtubeEmbedUrls: SafeResourceUrl[] = [];
-  selectedVideoIndex: number = 0;
+  selectedVideoIndex: number = -1;
 
   // Cantidad del producto
   quantity: number = 1;
@@ -93,6 +100,23 @@ export class ProductDetail implements OnInit {
         this.loading = false;
       }
     });
+    this.loadRecommendedProduct(slug)
+  }
+
+  loadRecommendedProduct(slug: string): void {
+    this.loadingRecommendations = true;
+    this.recommendedProducts = [];
+
+    this.productService.getRecommendedProducts(slug).subscribe({
+      next: (products) => {
+        this.recommendedProducts = products;
+        this.loadingRecommendations = false;
+      },
+      error: (err) => {
+        console.error('Error cargando productos recomendados:', err);
+        this.loadingRecommendations = false;
+      }
+    });
   }
 
   processYoutubeLinks(links: string[]): void {
@@ -132,7 +156,7 @@ export class ProductDetail implements OnInit {
   }
 
   // Añadir al carrito
-  addToCart(): void {
+  addToCartMain(): void {
     if (!this.product) return;
 
     console.log(`Añadiendo ${this.quantity} unidad(es) de "${this.product.name}" al carrito`);
@@ -143,6 +167,27 @@ export class ProductDetail implements OnInit {
   // Chatbot
   toggleChatbot(): void {
     this.chatbotOpen = !this.chatbotOpen;
+  }
+
+  // Navegación
+  viewProductDetail(product: Product) {
+    this.router.navigate(['/tienda/producto', product.slug]);
+  }
+
+  // Calcular precio final
+  calculateFinalPrice(product: Product): string {
+    if (product.discount_percentage > 0) {
+      const discount = (parseFloat(product.price.toString()) * product.discount_percentage) / 100;
+      const final = parseFloat(product.price.toString()) - discount;
+      return final.toFixed(2);
+    }
+    return parseFloat(product.price.toString()).toFixed(2);
+  }
+
+  addToCart(event: Event, product: Product) {
+    event.stopPropagation(); // Evitar que se active el click del card
+    console.log('Agregar al carrito:', product);
+    // TODO: Implementar lógica de carrito
   }
 
   selectSuggestedMessage(message: string): void {

@@ -71,6 +71,26 @@
   width: 100%;
 }
 
+::ng-deep .mdc-slider__track .mdc-slider__track--active_fill {
+  border-color: #f5a623
+}
+::ng-deep .mat-mdc-slider .mdc-slider__thumb-knob {
+  background-color: #f5a623 !important; /* color del círculo */
+  border-color: #f5a623 !important;     /* borde del círculo */
+}
+
+/* Si quieres también que el contorno (focus ring) sea del mismo color */
+::ng-deep .mat-mdc-slider .mat-mdc-focus-indicator {
+  background-color: #f5a623 !important;
+}
+
+/* Cambia el color de la burbuja de valor (tooltip) */
+::ng-deep .mat-mdc-slider .mdc-slider__value-indicator {
+  background-color: #f5a623 !important;
+  color: white !important;
+}
+
+
 .price-slider .full-width-slider {
   width: 100%;
 }
@@ -171,9 +191,8 @@
 
 .product-card {
   background: white;
-  border-radius: 8px;
+  border-radius: 5px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: transform 0.3s, box-shadow 0.3s;
   position: relative;
@@ -277,12 +296,6 @@
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s;
-  box-shadow: 0 2px 8px rgba(245, 166, 35, 0.3);
-}
-
-.add-to-cart-btn:hover {
-  background-color: #e09615;
-  transform: scale(1.1);
 }
 
 .add-to-cart-btn mat-icon {

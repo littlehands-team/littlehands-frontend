@@ -33,6 +33,15 @@ export class ProductService {
     );
   }
 
+  getRecommendedProducts(slug: string): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/products/${slug}/recommendations/`).pipe(
+      catchError((error) => {
+        console.error(`Error al obtener productos recomendados para "${slug}":`, error);
+        return of([]);
+      })
+    );
+  }
+
   getShopProducts(
     page: number = 1,
     pageSize: number = 10,
