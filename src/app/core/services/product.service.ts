@@ -39,7 +39,7 @@ export class ProductService {
       updated_by: userId,
     };
 
-    return this.http.post<Product>(`${this.apiUrl}/`, payload).pipe(
+    return this.http.post<Product>(`${this.apiUrl}/products/`, payload).pipe(
       map((newProduct) => ({
         ...newProduct,
       })),
@@ -63,7 +63,7 @@ export class ProductService {
       updated_by: userId,
     };
 
-    return this.http.patch<Product>(`${this.apiUrl}/${id}/`, payload).pipe(
+    return this.http.patch<Product>(`${this.apiUrl}/products/${id}/update/`, payload).pipe(
       map((updatedProduct) => ({
         ...updatedProduct,
       })),

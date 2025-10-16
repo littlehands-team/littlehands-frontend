@@ -84,17 +84,20 @@
     <div class="price-info" *ngIf="finalPrice !== null">
       <div class="price-detail">
         <span>Precio original:</span>
-        <strong>S/ {{ productForm.get('price')?.value || 0 }}</strong>
+        <strong>S/ {{ productForm.get('price')?.value || 0 | number:'1.2-2' }}</strong>
       </div>
+
       <div class="price-detail" *ngIf="productForm.get('discount_percentage')?.value > 0">
         <span>Descuento ({{ productForm.get('discount_percentage')?.value }}%):</span>
-        <strong class="discount-amount">- S/ {{ discountAmount }}</strong>
+        <strong class="discount-amount">- S/ {{ discountAmount | number:'1.2-2' }}</strong>
       </div>
+
       <div class="price-detail final">
         <span>Precio final:</span>
-        <strong class="final-price">S/ {{ finalPrice }}</strong>
+        <strong class="final-price">S/ {{ finalPrice | number:'1.2-2' }}</strong>
       </div>
     </div>
+
 
     <!-- Image Upload -->
     <div class="form-group">
@@ -149,9 +152,13 @@
       <button type="button" class="btn-cancel" (click)="closeDialog()">
         Cancelar
       </button>
-      <button type="submit" class="btn-save" [disabled]="productForm.invalid || uploadingImage">
+      <button
+        type="submit"
+        class="btn-save"
+        [disabled]="productForm.invalid || (!imageSelected && !productForm.get('image_url')?.value) || uploadingImage">
         {{ isEditMode ? 'Guardar cambios' : 'Crear producto' }}
       </button>
+
     </div>
 
   </form>

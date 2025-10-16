@@ -30,6 +30,7 @@ export class ProductDialog implements OnInit {
   isEditMode: boolean = false;
   imagePreview: string | null = null;
   uploadingImage: boolean = false;
+  imageSelected: File | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -48,7 +49,7 @@ export class ProductDialog implements OnInit {
       long_description: ['', Validators.required],
       price: [0, [Validators.required, Validators.min(0.01)]],
       discount_percentage: [0, [Validators.min(0), Validators.max(100)]],
-      image_url: ['', Validators.required],
+      image_url: [''],
       youtube_links: this.fb.array([]),
       is_active: [true]
     });
@@ -118,31 +119,20 @@ export class ProductDialog implements OnInit {
   onImageSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      this.uploadingImage = true;
+      this.imageSelected = file;
 
-      // Preview local
+      // Vista previa local
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.imagePreview = e.target.result;
       };
       reader.readAsDataURL(file);
 
-      // Upload to Cloudinary
-      this.cloudinaryService.uploadImage(file).subscribe({
-        next: (url) => {
-          this.productForm.patchValue({ image_url: url });
-          this.uploadingImage = false;
-          this.toast.success('Imagen subida exitosamente', 'Éxito', 2000);
-        },
-        error: (error) => {
-          console.error('Error uploading image:', error);
-          this.uploadingImage = false;
-          this.imagePreview = null;
-          this.toast.danger('Error al subir la imagen', 'Error', 3000);
-        }
-      });
+      // Ya NO subimos aquí a Cloudinary todavía
+      this.productForm.patchValue({ image_url: '' }); // limpiamos cualquier URL previa
     }
   }
+
 
   removeImage() {
     this.imagePreview = null;
@@ -179,6 +169,30 @@ export class ProductDialog implements OnInit {
       formValue.discount_percentage = 0;
     }
 
+    // 🔹 Subir imagen solo si hay una seleccionada y aún no tiene URL
+    if (this.imageSelected && !formValue.image_url) {
+      this.uploadingImage = true;
+      this.cloudinaryService.uploadImage(this.imageSelected).subscribe({
+        next: (url) => {
+          this.uploadingImage = false;
+          this.productForm.patchValue({ image_url: url });
+          this.saveProduct(); // 👈 guardamos después de obtener la URL
+        },
+        error: (error) => {
+          console.error('Error al subir la imagen:', error);
+          this.uploadingImage = false;
+          this.toast.danger('Error al subir la imagen', 'Error', 3000);
+        }
+      });
+    } else {
+      // Si ya tiene imagen subida o estamos editando sin cambiarla
+      this.saveProduct();
+    }
+  }
+
+  private saveProduct() {
+    const formValue = this.productForm.value;
+
     // Filtrar videos vacíos
     const validVideos = formValue.youtube_links.filter((link: string) => link.trim() !== '');
 
@@ -194,13 +208,10 @@ export class ProductDialog implements OnInit {
     };
 
     if (this.isEditMode && this.data?.id) {
-      // Update
       this.productService.updateProduct(this.data.id, productRequest as any).subscribe({
-        next: (result) => {
-          if (result) {
-            this.toast.success('Producto actualizado exitosamente', 'Éxito', 3000);
-            this.dialogRef.close(true);
-          }
+        next: () => {
+          this.toast.success('Producto actualizado exitosamente', 'Éxito', 3000);
+          this.dialogRef.close(true);
         },
         error: (error) => {
           console.error('Error updating product:', error);
@@ -208,13 +219,10 @@ export class ProductDialog implements OnInit {
         }
       });
     } else {
-      // Create
       this.productService.createProduct(productRequest as any).subscribe({
-        next: (result) => {
-          if (result) {
-            this.toast.success('Producto creado exitosamente', 'Éxito', 3000);
-            this.dialogRef.close(true);
-          }
+        next: () => {
+          this.toast.success('Producto creado exitosamente', 'Éxito', 3000);
+          this.dialogRef.close(true);
         },
         error: (error) => {
           console.error('Error creating product:', error);
@@ -223,6 +231,7 @@ export class ProductDialog implements OnInit {
       });
     }
   }
+
 
   closeDialog() {
     this.dialogRef.close(false);
