@@ -6,19 +6,42 @@
     <aside class="profile-sidebar">
       <div class="sidebar-title">MI CUENTA</div>
 
-      <button
-        class="sidebar-item"
-        [class.active]="activeSection === 'orders'"
-        (click)="setActiveSection('orders')">
-        ▸ MIS PEDIDOS
-      </button>
+      <ng-container *ngIf="userInfo?.role === 'buyer'">
+        <button
+          class="sidebar-item"
+          [class.active]="activeSection === 'orders'"
+          (click)="setActiveSection('orders')">
+          ▸ MIS PEDIDOS
+        </button>
+      </ng-container>
 
+      <!-- Botón: Panel de control -->
       <button
         class="sidebar-item"
         [class.active]="activeSection === 'account'"
         (click)="setActiveSection('account')">
         ▸ PANEL DE CONTROL
       </button>
+
+      <!-- 🔒 Solo visible para administradores -->
+      <ng-container *ngIf="userInfo?.role === 'admin'">
+        <!-- Botón: Productos -->
+        <button
+          class="sidebar-item"
+          [class.active]="activeSection === 'products'"
+          (click)="setActiveSection('products')">
+          ▸ PRODUCTOS
+        </button>
+
+        <!-- Botón: Pedidos de usuarios -->
+        <button
+          class="sidebar-item"
+          [class.active]="activeSection === 'admin-orders'"
+          (click)="setActiveSection('admin-orders')">
+          ▸ PEDIDOS
+        </button>
+
+      </ng-container>
 
       <button
         class="sidebar-item"
@@ -38,8 +61,8 @@
 
           <div class="info-group">
             <p class="info-label">Información del contacto</p>
-            <p class="info-value">{{ userInfo.firstName }} {{ userInfo.lastName }}</p>
-            <p class="info-value">{{ userInfo.email }}</p>
+            <p class="info-value">{{ userInfo?.first_name }} {{ userInfo?.last_name }}</p>
+            <p class="info-value">{{ userInfo?.email }}</p>
 
             <div class="action-links">
               <button class="link-button" (click)="onEdit()">Editar</button>
@@ -93,6 +116,98 @@
 
           <div *ngIf="orders.length === 0" class="empty-orders">
             <p>No tienes pedidos aún.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Products Section (Solo Admin) -->
+      <div *ngIf="activeSection === 'products'" class="products-section">
+        <h2 class="section-title">GESTIÓN DE PRODUCTOS</h2>
+        <div class="products-header">
+          <button class="add-product-button" (click)="openProductDialog()">
+            <mat-icon>add</mat-icon>
+            AGREGAR PRODUCTO
+          </button>
+        </div>
+
+        <div class="products-table-container">
+          <table mat-table [dataSource]="products" class="products-table">
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Nombre</th>
+              <td mat-cell *matCellDef="let product">{{ product.name }}</td>
+            </ng-container>
+
+            <!-- Price Column -->
+            <ng-container matColumnDef="price">
+              <th mat-header-cell *matHeaderCellDef>Precio</th>
+              <td mat-cell *matCellDef="let product">S/ {{ product.price }}</td>
+            </ng-container>
+
+            <!-- Discount Column -->
+            <ng-container matColumnDef="discount">
+              <th mat-header-cell *matHeaderCellDef>Descuento</th>
+              <td mat-cell *matCellDef="let product">
+          <span class="discount-badge" *ngIf="product.discount_percentage > 0">
+            {{ product.discount_percentage }}%
+          </span>
+                <span *ngIf="product.discount_percentage === 0">-</span>
+              </td>
+            </ng-container>
+
+            <!-- Final Price Column -->
+            <ng-container matColumnDef="finalPrice">
+              <th mat-header-cell *matHeaderCellDef>Precio Final</th>
+              <td mat-cell *matCellDef="let product">
+                <span class="final-price">
+                  S/ {{ calculateFinalPrice(product) | number:'1.2-2' }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Status Column -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Estado</th>
+              <td mat-cell *matCellDef="let product">
+                <span class="status-badge" [class.active]="product.is_active" [class.inactive]="!product.is_active">
+                  {{ product.is_active ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Acciones</th>
+              <td mat-cell *matCellDef="let product">
+                <div class="action-buttons">
+                  <button mat-icon-button (click)="viewProduct(product)" matTooltip="Ver detalles" >
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="editProduct(product)" matTooltip="Editar" >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="toggleProductStatus(product)"
+                          [matTooltip]="product.is_active ? 'Desactivar' : 'Activar'">
+                    <mat-icon>{{ product.is_active ? 'toggle_on' : 'toggle_off' }}</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="deleteProduct(product)" matTooltip="Eliminar" class="delete-btn">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+
+          <div *ngIf="products.length === 0" class="empty-products">
+            <mat-icon>inventory_2</mat-icon>
+            <p>No hay productos registrados.</p>
+            <button class="add-first-product" (click)="openProductDialog()">
+              Agregar primer producto
+            </button>
           </div>
         </div>
       </div>
