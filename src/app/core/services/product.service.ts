@@ -24,6 +24,15 @@ export class ProductService {
     );
   }
 
+  getProductBySlug(slug: string): Observable<Product | null> {
+    return this.http.get<Product>(`${this.apiUrl}/products/${slug}/`).pipe(
+      catchError((error) => {
+        console.error(`Error al obtener el producto con slug "${slug}":`, error);
+        return of(null);
+      })
+    );
+  }
+
   getShopProducts(
     page: number = 1,
     pageSize: number = 10,

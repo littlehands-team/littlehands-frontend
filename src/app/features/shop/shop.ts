@@ -161,7 +161,7 @@ export class Shop implements OnInit {
 
   // Navegación
   viewProductDetail(product: Product) {
-    this.router.navigate(['/product', product.id]);
+    this.router.navigate(['/tienda/producto', product.slug]);
   }
 
   addToCart(event: Event, product: Product) {

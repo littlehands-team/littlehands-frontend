@@ -5,9 +5,11 @@ import {About} from './features/about/about';
 import {Login} from './features/auth/login/login';
 import { Register } from './features/auth/register/register';
 import { Cart } from './features/cart/cart';
+import {ProductDetail} from './features/shop/product-detail/product-detail';
 
 export const routes: Routes = [
   { path: 'tienda', component: Shop },
+  { path: 'tienda/producto/:slug', component: ProductDetail },
   { path: 'perfil', component: Profile },
   { path: 'nosotros', component: About },
   { path: 'carrito', component: Cart },
