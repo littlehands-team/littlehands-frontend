@@ -149,7 +149,7 @@ export class Profile implements OnInit {
     const newStatus = !product.is_active;
     const updatedProduct = { ...product, is_active: newStatus };
 
-    this.productService.updateProduct(product.id!, updatedProduct).subscribe((result) => {
+    this.productService.toggleProductStatus(product.id!).subscribe((result) => {
       if (result) {
         this._snackBar.open(`Producto ${newStatus ? 'activado' : 'desactivado'} exitosamente`, 'Cerrar',{
           horizontalPosition: 'center',

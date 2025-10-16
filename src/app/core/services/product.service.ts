@@ -11,12 +11,12 @@ import { CryptoService } from './crypto.service';
   providedIn: 'root'
 })
 export class ProductService {
-  private apiUrl = `${environment.apiUrl}/products`;
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient, private crypto: CryptoService) {}
 
   getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.apiUrl}/`).pipe(
+    return this.http.get<Product[]>(`${this.apiUrl}/products/`).pipe(
       catchError((error) => {
         console.error('Error al obtener productos:', error);
         return of([]);
@@ -75,7 +75,7 @@ export class ProductService {
   }
 
   deleteProduct(id: number): Observable<boolean> {
-    return this.http.delete(`${this.apiUrl}/${id}/`).pipe(
+    return this.http.delete(`${this.apiUrl}/products/${id}/delete`).pipe(
       map(() => true),
       catchError((error) => {
         console.error(`Error al eliminar producto con ID ${id}:`, error);
@@ -96,7 +96,7 @@ export class ProductService {
       updated_by: userId,
     };
 
-    return this.http.patch<Product>(`${this.apiUrl}/${id}/`, payload).pipe(
+    return this.http.patch<Product>(`${this.apiUrl}/products/${id}/toggle-active/`, payload).pipe(
       catchError((error) => {
         console.error(`Error al cambiar estado de producto ${id}:`, error);
         return of(null);
