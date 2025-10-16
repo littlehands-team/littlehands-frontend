@@ -5,14 +5,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ProductService} from '../../../core/services/product.service';
 import { Product} from '../../../shared/models/product.model';
-import {MatFormFieldModule} from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
-
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, MatFormFieldModule, FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.css'
 })
@@ -35,12 +33,25 @@ export class ProductDetail implements OnInit {
   chatbotOpen: boolean = false;
   chatbotQuestion: string = '';
 
-  // Preguntas frecuentes predefinidas
-  frequentQuestions: string[] = [
-    'What skills will I gain from this course?',
-    'How do I create a basic Dockerfile?',
-    'How does cleaning the local environment help Docker build?',
-    'Take me to the lecture about Jenkins CI/CD pipelines'
+  // Mensajes del chat
+  chatMessages: Array<{text: string, isUser: boolean, timestamp: Date}> = [];
+
+  // Mensajes sugeridos predefinidos
+  suggestedMessages: string[] = [
+    '¿Es seguro para niños pequeños?',
+    '¿Qué habilidades desarrolla este juguete?'
+  ];
+
+  // Respuestas genéricas del bot
+  private botResponses: string[] = [
+    'Este juguete está diseñado siguiendo los principios Montessori, fomentando el aprendizaje autónomo y la creatividad de los niños.',
+    'Todos nuestros productos están fabricados con materiales naturales y no tóxicos, seguros para los más pequeños.',
+    'Este juguete ayuda a desarrollar la motricidad fina, coordinación ojo-mano y resolución de problemas.',
+    'Recomendamos supervisión de un adulto durante el juego, especialmente para niños menores de 3 años.',
+    'La edad recomendada está indicada en la ficha del producto. Cada juguete está diseñado para un rango de edad específico.',
+    'Nuestros juguetes de madera son duraderos y pueden limpiarse con un paño húmedo. Evitar sumergir en agua.',
+    'Todos nuestros productos cumplen con las normativas europeas de seguridad EN71.',
+    'El envío suele tardar entre 3-5 días laborables dentro de la península.'
   ];
 
   constructor(
@@ -134,17 +145,45 @@ export class ProductDetail implements OnInit {
     this.chatbotOpen = !this.chatbotOpen;
   }
 
-  selectQuestion(question: string): void {
-    this.chatbotQuestion = question;
+  selectSuggestedMessage(message: string): void {
+    this.chatbotQuestion = message;
+    this.sendChatbotQuestion();
   }
 
   sendChatbotQuestion(): void {
     if (!this.chatbotQuestion.trim()) return;
 
-    console.log('Pregunta enviada:', this.chatbotQuestion);
-    // TODO: Implementar lógica del chatbot
-    alert(`Pregunta: ${this.chatbotQuestion}`);
+    // Agregar mensaje del usuario
+    this.chatMessages.push({
+      text: this.chatbotQuestion,
+      isUser: true,
+      timestamp: new Date()
+    });
+
+    const userQuestion = this.chatbotQuestion;
     this.chatbotQuestion = '';
+
+    // Simular "escribiendo..." y respuesta del bot después de 1 segundo
+    setTimeout(() => {
+      const randomResponse = this.botResponses[Math.floor(Math.random() * this.botResponses.length)];
+      this.chatMessages.push({
+        text: randomResponse,
+        isUser: false,
+        timestamp: new Date()
+      });
+
+      // Scroll al final del chat
+      this.scrollChatToBottom();
+    }, 1000);
+  }
+
+  private scrollChatToBottom(): void {
+    setTimeout(() => {
+      const chatContainer = document.querySelector('.chat-messages');
+      if (chatContainer) {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+    }, 100);
   }
 
   // Calcular precio final

@@ -234,49 +234,162 @@
 
 /* Chatbot Section */
 .chatbot-section {
-  background: #f9f9f9;
+  background: #fff;
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 1.5rem;
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.chatbot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
 }
 
 .chatbot-section h3 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1rem;
+  margin: 0;
+  font-size: 1.1rem;
   color: #333;
+  font-weight: 600;
 }
 
 .chatbot-subtitle {
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   color: #999;
-  margin: 0 0 1rem 0;
+  margin: 0;
+  line-height: 1.4;
 }
 
-.frequent-questions {
+/* Chat Messages Container */
+.chat-messages {
+  max-height: 300px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #f9f9f9;
+  border-radius: 8px;
+  margin: 0.5rem 0;
+}
+
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background: #ffc107;
+  border-radius: 10px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+  background: #ffb300;
+}
+
+/* Message Bubbles */
+.message {
+  display: flex;
+  animation: messageSlideIn 0.3s ease-out;
+}
+
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.user-message {
+  justify-content: flex-end;
+}
+
+.bot-message {
+  justify-content: flex-start;
+}
+
+.message-bubble {
+  max-width: 75%;
+  padding: 0.75rem 1rem;
+  border-radius: 16px;
+  line-height: 1.5;
+  font-size: 0.9rem;
+  word-wrap: break-word;
+}
+
+.user-message .message-bubble {
+  background: #ffc107;
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+.bot-message .message-bubble {
+  background: #fff;
+  color: #333;
+  border: 1px solid #e0e0e0;
+  border-bottom-left-radius: 4px;
+}
+
+/* Empty State */
+.chat-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  color: #999;
+  text-align: center;
+}
+
+.chat-empty svg {
+  margin-bottom: 0.75rem;
+  opacity: 0.5;
+}
+
+.chat-empty p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* Suggested Messages */
+.suggested-messages {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  margin-bottom: 1rem;
 }
 
-.question-btn {
+.suggested-btn {
   background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  padding: 0.75rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 20px;
+  padding: 0.75rem 1.25rem;
   text-align: left;
   cursor: pointer;
   transition: all 0.2s;
   font-size: 0.875rem;
-  color: #666;
+  color: #555;
+  font-weight: 500;
 }
 
-.question-btn:hover {
+.suggested-btn:hover {
   border-color: #ffc107;
   background: #fffbf0;
+  transform: translateX(4px);
 }
 
+/* Ask Question Input */
 .ask-question {
   display: flex;
   gap: 0.5rem;
@@ -284,10 +397,11 @@
 
 .ask-question input {
   flex: 1;
-  padding: 0.75rem;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
+  padding: 0.875rem 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
   font-size: 0.875rem;
+  transition: all 0.2s;
 }
 
 .ask-question input:focus {
@@ -296,11 +410,11 @@
 }
 
 .btn-send {
-  width: 48px;
+  min-width: 48px;
   height: 48px;
   background: #ffc107;
   border: none;
-  border-radius: 4px;
+  border-radius: 24px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -308,25 +422,17 @@
   transition: all 0.2s;
 }
 
-.btn-send:hover {
+.btn-send:hover:not(:disabled) {
   background: #ffb300;
+}
+
+.btn-send:disabled {
+  background: #e0e0e0;
+  cursor: not-allowed;
 }
 
 .btn-send svg {
   color: #fff;
-}
-
-.ia-badge {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: #fff;
-  border: 2px solid #ffc107;
-  border-radius: 20px;
-  padding: 0.25rem 1rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #ffc107;
 }
 
 /* Video Player Section */
