@@ -1,0 +1,158 @@
+<div class="product-dialog">
+  <div class="dialog-header">
+    <h2>{{ isEditMode ? 'Editar Producto' : 'Nuevo Producto' }}</h2>
+    <button mat-icon-button (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="dialog-content">
+
+    <!-- Name -->
+    <div class="form-group">
+      <label for="name">Nombre del producto *</label>
+      <input
+        id="name"
+        type="text"
+        formControlName="name"
+        placeholder="Ej: Torre de Aprendizaje Montessori" />
+      <div class="error-message" *ngIf="productForm.get('name')?.touched && productForm.get('name')?.hasError('required')">
+        El nombre es obligatorio
+      </div>
+    </div>
+
+    <!-- Short Description -->
+    <div class="form-group">
+      <label for="shortDesc">Descripción corta *</label>
+      <input
+        id="shortDesc"
+        type="text"
+        formControlName="short_description"
+        placeholder="Breve descripción del producto (máx 300 caracteres)"
+        maxlength="300" />
+      <span class="char-count">{{ shortDescriptionLength }}/300</span>
+      <div class="error-message" *ngIf="productForm.get('short_description')?.touched && productForm.get('short_description')?.hasError('required')">
+        La descripción corta es obligatoria
+      </div>
+    </div>
+
+    <!-- Long Description -->
+    <div class="form-group">
+      <label for="longDesc">Descripción detallada *</label>
+      <textarea
+        id="longDesc"
+        formControlName="long_description"
+        placeholder="Descripción completa del producto, características, materiales, etc."
+        rows="5"></textarea>
+      <div class="error-message" *ngIf="productForm.get('long_description')?.touched && productForm.get('long_description')?.hasError('required')">
+        La descripción detallada es obligatoria
+      </div>
+    </div>
+
+    <!-- Price and Discount -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="price">Precio (S/) *</label>
+        <input
+          id="price"
+          type="number"
+          formControlName="price"
+          placeholder="0.00"
+          step="0.01"
+          min="0" />
+        <div class="error-message" *ngIf="productForm.get('price')?.touched && productForm.get('price')?.hasError('required')">
+          El precio es obligatorio
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="discount">Descuento (%) *</label>
+        <input
+          id="discount"
+          type="number"
+          formControlName="discount_percentage"
+          placeholder="0"
+          min="0"
+          max="100" />
+        <div class="error-message" *ngIf="productForm.get('discount_percentage')?.touched && productForm.get('discount_percentage')?.hasError('max')">
+          El descuento no puede ser mayor a 100%
+        </div>
+      </div>
+    </div>
+
+    <!-- Final Price Info -->
+    <div class="price-info" *ngIf="finalPrice !== null">
+      <div class="price-detail">
+        <span>Precio original:</span>
+        <strong>S/ {{ productForm.get('price')?.value || 0 }}</strong>
+      </div>
+      <div class="price-detail" *ngIf="productForm.get('discount_percentage')?.value > 0">
+        <span>Descuento ({{ productForm.get('discount_percentage')?.value }}%):</span>
+        <strong class="discount-amount">- S/ {{ discountAmount }}</strong>
+      </div>
+      <div class="price-detail final">
+        <span>Precio final:</span>
+        <strong class="final-price">S/ {{ finalPrice }}</strong>
+      </div>
+    </div>
+
+    <!-- Image Upload -->
+    <div class="form-group">
+      <label for="image">Imagen del producto *</label>
+      <div class="image-upload-container">
+        <div class="image-preview" *ngIf="imagePreview">
+          <img [src]="imagePreview" alt="Preview">
+          <button type="button" class="remove-image" (click)="removeImage()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        <div class="upload-button" *ngIf="!imagePreview">
+          <input
+            type="file"
+            id="image"
+            accept="image/*"
+            (change)="onImageSelected($event)"
+            #fileInput />
+          <label for="image" class="file-label">
+            <mat-icon>cloud_upload</mat-icon>
+            <span>{{ uploadingImage ? 'Subiendo...' : 'Seleccionar imagen' }}</span>
+          </label>
+        </div>
+      </div>
+      <div class="error-message" *ngIf="productForm.get('image_url')?.touched && productForm.get('image_url')?.hasError('required')">
+        La imagen es obligatoria
+      </div>
+    </div>
+
+    <!-- YouTube Videos -->
+    <div class="form-group">
+      <label>Videos de YouTube (opcional)</label>
+      <div formArrayName="youtube_links">
+        <div *ngFor="let video of youtubeLinks.controls; let i = index" class="video-input-row">
+          <input
+            type="url"
+            [formControlName]="i"
+            placeholder="https://www.youtube.com/watch?v=..." />
+          <button type="button" mat-icon-button (click)="removeVideo(i)" class="remove-video-btn">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+      <button type="button" class="add-video-btn" (click)="addVideoInput()">
+        <mat-icon>add</mat-icon>
+        Agregar video
+      </button>
+    </div>
+
+    <!-- Actions -->
+    <div class="dialog-actions">
+      <button type="button" class="btn-cancel" (click)="closeDialog()">
+        Cancelar
+      </button>
+      <button type="submit" class="btn-save" [disabled]="productForm.invalid || uploadingImage">
+        {{ isEditMode ? 'Guardar cambios' : 'Crear producto' }}
+      </button>
+    </div>
+
+  </form>
+</div>

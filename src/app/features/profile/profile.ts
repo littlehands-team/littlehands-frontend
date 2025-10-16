@@ -12,6 +12,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { ProductDialog } from './product-dialog/product-dialog';
 
 
 interface Order {
@@ -120,7 +121,7 @@ export class Profile implements OnInit {
   }
 
   openProductDialog(product?: Product) {
-    /*const dialogRef = this.dialog.open(ProductDialogComponent, {
+    const dialogRef = this.dialog.open(ProductDialog, {
       width: '800px',
       maxHeight: '90vh',
       data: product ? { ...product } : null
@@ -130,7 +131,7 @@ export class Profile implements OnInit {
       if (result) {
         this.loadProducts();
       }
-    });*/
+    });
   }
 
   viewProduct(product: Product) {
