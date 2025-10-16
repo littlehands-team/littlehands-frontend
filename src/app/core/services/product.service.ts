@@ -75,7 +75,16 @@ export class ProductService {
   }
 
   deleteProduct(id: number): Observable<boolean> {
-    return this.http.delete(`${this.apiUrl}/products/${id}/delete`).pipe(
+    const userId = this.crypto.getCurrentUserId();
+
+    if (!userId) {
+      console.error('❌ Usuario no autenticado');
+      return of(false);
+    }
+
+    const body = { updated_by: userId };
+
+    return this.http.delete(`${this.apiUrl}/products/${id}/delete/`, { body }).pipe(
       map(() => true),
       catchError((error) => {
         console.error(`Error al eliminar producto con ID ${id}:`, error);

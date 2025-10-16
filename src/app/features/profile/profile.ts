@@ -30,7 +30,7 @@ interface Order {
   styleUrl: './profile.css'
 })
 export class Profile implements OnInit {
-  activeSection: 'orders' | 'account' | 'admin-orders' | 'products' = 'account';
+  activeSection: 'orders' | 'account' | 'admin-orders' | 'products' = 'products';
 
   products: Product[] = [];
   displayedColumns: string[] = ['name', 'price', 'discount', 'finalPrice', 'status', 'actions'];
