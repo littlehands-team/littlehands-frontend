@@ -2,6 +2,7 @@ import {AgeCategory} from '../enums/age.enum';
 
 export interface ProductRequest {
   name: string;
+  slug: string;
   short_description: string;
   long_description: string;
   price: number;

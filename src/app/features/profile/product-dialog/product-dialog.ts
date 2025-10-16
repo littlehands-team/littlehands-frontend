@@ -50,6 +50,7 @@ export class ProductDialog implements OnInit {
 
     this.productForm = this.fb.group({
       name: ['', Validators.required],
+      slug: [''],
       short_description: ['', [Validators.required, Validators.maxLength(300)]],
       long_description: ['', Validators.required],
       price: [0, [Validators.required, Validators.min(0.01)]],
@@ -205,6 +206,7 @@ export class ProductDialog implements OnInit {
 
     const productRequest: ProductRequest = {
       name: formValue.name,
+      slug: formValue.slug,
       short_description: formValue.short_description,
       long_description: formValue.long_description,
       price: parseFloat(formValue.price),

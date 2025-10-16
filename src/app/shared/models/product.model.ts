@@ -4,6 +4,7 @@ import {AgeCategory} from '../enums/age.enum';
 export interface Product {
   id?: number; // opcional al crear
   name: string;
+  slug: string;
   short_description: string;
   long_description: string;
   price: number;
