@@ -57,6 +57,11 @@ export class AppNavbar {
     // Navegar al carrito
   }
 
+  isUserLogged(): boolean {
+    const user = localStorage.getItem('hh-current-user');
+    return !!user; // retorna true si existe, false si no
+  }
+
   toggleMenu() {
     console.log('Buscando:', this.menuOpened);
     this.menuOpened = !this.menuOpened;

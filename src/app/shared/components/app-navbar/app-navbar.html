@@ -35,8 +35,12 @@
 
         <!-- Cuenta -->
         <div class="account-section" (click)="goToAccount()">
-          <mat-icon class="account-icon">person_add</mat-icon>
-          <span class="account-text">CUENTA</span>
+          <mat-icon class="account-icon">
+            {{ isUserLogged() ? 'person' : 'person_add' }}
+          </mat-icon>
+          <span class="account-text">
+            {{ isUserLogged() ? 'MI CUENTA' : 'INGRESAR' }}
+          </span>
         </div>
 
         <!-- Carrito -->

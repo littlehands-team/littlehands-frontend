@@ -31,7 +31,7 @@ interface Order {
   styleUrl: './profile.css'
 })
 export class Profile implements OnInit {
-  activeSection: 'orders' | 'account' | 'admin-orders' | 'products' = 'products';
+  activeSection: 'orders' | 'account' | 'admin-orders' | 'products' = 'account';
 
   products: Product[] = [];
   displayedColumns: string[] = ['name', 'price', 'discount', 'finalPrice', 'status', 'actions'];
@@ -213,11 +213,14 @@ export class Profile implements OnInit {
   }
 
   logOut() {
-    //this.userService.logout()
+    const confirmado = window.confirm('¿Estás seguro que quieres cerrar sesión?');
+    if (!confirmado) return;
+
     // Limpia el token
     localStorage.removeItem('hh-current-user');
 
     // Redirigir al login
     this.router.navigate(['/auth/login']);
   }
+
 }

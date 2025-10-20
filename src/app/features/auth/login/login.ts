@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { UserService } from '../../../core/services/user.service';
 import { NgToastService } from 'ng-angular-popup';
 import { CryptoService } from '../../../core/services/crypto.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface RememberMeData {
   email: string;
@@ -36,6 +37,7 @@ interface RememberMeData {
 export class Login implements OnInit {
   loginForm: FormGroup;
   private readonly REMEMBER_ME_KEY = 'lh-remember-me';
+  private _snackBar = inject(MatSnackBar);
 
   constructor(
     private fb: FormBuilder,
@@ -110,7 +112,11 @@ export class Login implements OnInit {
           this.toast.success('Bienvenido', 'Login exitoso', 3000);
           this.router.navigate(['/']);
         } else {
-          this.toast.danger(res.message, 'Error', 3000);
+          this._snackBar.open(res.message, 'Cerrar',{
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+            duration: 3000,
+          });
         }
       });
     }
