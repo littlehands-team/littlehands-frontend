@@ -140,6 +140,7 @@ export class Profile implements OnInit {
       maxHeight: '90vh',
       data: product
     });*/
+    this.router.navigate(['/tienda/producto', product.slug]);
   }
 
   editProduct(product: Product) {
