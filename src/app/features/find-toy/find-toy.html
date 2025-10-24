@@ -66,58 +66,61 @@
 
       <!-- Mensajes del chat -->
       <div class="chat-messages">
-        <div
-          *ngFor="let msg of chatMessages"
-          class="message"
-          [ngClass]="msg.isBot ? 'bot-message' : 'user-message'"
-        >
-          <div class="message-bubble" [innerHTML]="formatBotMessage(msg)">
-          </div>
-        </div>
-
-        <!-- Productos recomendados -->
-        <div *ngIf="showProducts && recommendedProducts.length > 0" class="products-container">
+        <ng-container *ngFor="let msg of chatMessages">
+          <!-- Burbuja del mensaje -->
           <div
-            *ngFor="let product of recommendedProducts"
-            class="product-card-chat"
+            class="message"
+            [ngClass]="msg.isBot ? 'bot-message' : 'user-message'"
           >
-            <img [src]="product.image_url" [alt]="product.name" />
-            <div class="product-info">
-              <h4>{{ product.name }}</h4>
-              <div class="product-price">
-                <span class="final-price">
-                  S/ {{ calculateFinalPrice(product) }}
-                </span>
-                <span
-                  *ngIf="product.discount_percentage > 0"
-                  class="original-price"
-                >
-                  S/ {{ product.price }}
-                </span>
-              </div>
-              <button
-                class="product-action-btn"
-                [ngClass]="!product.is_active ? 'whatsapp-btn' : ''"
-                (click)="handleProductClick(product)"
-              >
-                <ng-container *ngIf="product.is_active">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="9" cy="21" r="1"></circle>
-                    <circle cx="20" cy="21" r="1"></circle>
-                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                  </svg>
-                  Ver en tienda
-                </ng-container>
-                <ng-container *ngIf="!product.is_active">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                  </svg>
-                  Consultar por WhatsApp
-                </ng-container>
-              </button>
+            <div class="message-bubble">
+              {{ msg.text }}
             </div>
           </div>
-        </div>
+
+          <!-- Productos asociados a ESTE mensaje (aparecen debajo) -->
+          <div *ngIf="msg.products && msg.products.length > 0" class="products-container-inline">
+            <div
+              *ngFor="let product of msg.products"
+              class="product-card-chat"
+            >
+              <img [src]="product.image_url" [alt]="product.name" />
+              <div class="product-info">
+                <h4>{{ product.name }}</h4>
+                <div class="product-price">
+          <span class="final-price">
+            S/ {{ calculateFinalPrice(product) }}
+          </span>
+                  <span
+                    *ngIf="product.discount_percentage > 0"
+                    class="original-price"
+                  >
+            S/ {{ product.price }}
+          </span>
+                </div>
+                <button
+                  class="product-action-btn"
+                  [ngClass]="!product.is_active ? 'whatsapp-btn' : ''"
+                  (click)="handleProductClick(product)"
+                >
+                  <ng-container *ngIf="product.is_active">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="9" cy="21" r="1"></circle>
+                      <circle cx="20" cy="21" r="1"></circle>
+                      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    Ver en tienda
+                  </ng-container>
+                  <ng-container *ngIf="!product.is_active">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    Consultar por WhatsApp
+                  </ng-container>
+                </button>
+              </div>
+            </div>
+          </div>
+        </ng-container>
       </div>
 
       <!-- Input del chat -->

@@ -36,8 +36,6 @@ export class FindToy implements OnInit {
 
   chatMessages: Message[] = [];
   userMessage: string = '';
-  recommendedProducts: Product[] = [];
-  showProducts: boolean = false;
 
   // Preguntas del formulario
   questions: Question[] = [
@@ -125,26 +123,6 @@ export class FindToy implements OnInit {
     return formatted;
   }
 
-
-  loadRecommendedProducts(): void {
-    // TODO: Implementar llamada al backend con las respuestas
-    // Por ahora usamos productos mock
-
-    // Simulación de productos (reemplazar con llamada real al backend)
-    setTimeout(() => {
-      this.productService.getShopProducts(1, 4).subscribe({
-        next: (response) => {
-          if (response && response.products) {
-            this.recommendedProducts = response.products;
-          }
-        },
-        error: (err) => {
-          console.error('Error cargando productos recomendados:', err);
-        }
-      });
-    }, 500);
-  }
-
   handleSendMessage(): void {
     if (!this.userMessage.trim()) return;
 
@@ -165,7 +143,7 @@ export class FindToy implements OnInit {
       .subscribe({
         next: (response: any) => {
           let botText: string = '';
-          let productsFromAI: any[] = [];
+          let productsFromAI: Product[] = [];
 
           // 🔹 Si la API devolvió directamente un objeto con productos
           if (response && response.products) {
@@ -180,6 +158,7 @@ export class FindToy implements OnInit {
               try {
                 const jsonText = jsonMatch[1].trim();
                 productsFromAI = JSON.parse(jsonText);
+
                 // Elimina el bloque JSON del texto mostrado al usuario
                 botText = botText.replace(/```json[\s\S]*?```/, '').trim();
               } catch (e) {
@@ -188,20 +167,15 @@ export class FindToy implements OnInit {
             }
           }
 
-          // 🔹 Mostrar mensaje del bot
+          // 🔹 Crear mensaje del bot CON productos embebidos
           const botResponse: Message = {
             text: botText || 'Aquí tienes mis recomendaciones basadas en tus respuestas:',
             isBot: true,
-            timestamp: new Date()
+            timestamp: new Date(),
+            products: productsFromAI.length > 0 ? productsFromAI : undefined // ← NUEVO
           };
+
           this.chatMessages.push(botResponse);
-
-          // 🔹 Si se encontraron productos, mostrarlos
-          if (productsFromAI.length > 0) {
-            this.recommendedProducts = productsFromAI;
-            this.showProducts = true;
-          }
-
           this.scrollToBottom();
         },
         error: (err) => {

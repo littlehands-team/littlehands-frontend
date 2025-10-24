@@ -412,9 +412,35 @@
   border-bottom-right-radius: 5px;
 }
 
+.products-container-inline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-left: 0;
+  width: 100%;
+}
+
 /* ============================================ */
 /* PRODUCTOS EN EL CHAT */
 /* ============================================ */
+
+/* Productos dentro de mensajes específicos */
+.message-products {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.bot-message .message-products {
+  padding-left: 0;
+}
+
+.bot-message .message-bubble {
+  margin-bottom: 0;
+}
 
 .products-container {
   display: flex;
