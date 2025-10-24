@@ -6,12 +6,14 @@ import {Login} from './features/auth/login/login';
 import { Register } from './features/auth/register/register';
 import { Cart } from './features/cart/cart';
 import {ProductDetail} from './features/shop/product-detail/product-detail';
+import {FindToy} from './features/find-toy/find-toy';
 
 export const routes: Routes = [
   { path: 'tienda', component: Shop },
   { path: 'tienda/producto/:slug', component: ProductDetail },
   { path: 'perfil', component: Profile },
   { path: 'nosotros', component: About },
+  { path: 'encuentra-juguete', component: FindToy },
   { path: 'carrito', component: Cart },
   { path: 'auth/login', component: Login },
   { path: 'auth/register', component: Register },

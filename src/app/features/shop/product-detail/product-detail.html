@@ -98,35 +98,47 @@
 
         <p class="chatbot-subtitle">Nuestro asistente de IA puede cometer errores. Verifica la información importante.</p>
 
-        <!-- Chat Messages -->
-        <div class="chat-messages" *ngIf="chatMessages.length > 0">
-          <div
-            *ngFor="let message of chatMessages"
-            class="message"
-            [class.user-message]="message.isUser"
-            [class.bot-message]="!message.isUser"
-          >
-            <div class="message-bubble">
-              {{ message.text }}
+        <!-- Chat Messages Container -->
+        <div class="chat-container">
+
+          <!-- Empty State -->
+          <div class="chat-empty" *ngIf="chatMessages.length === 0 && !isChatLoading">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <p>¿Tienes preguntas? Estoy aquí para ayudarte</p>
+          </div>
+
+          <!-- Chat Messages -->
+          <div class="chat-messages" *ngIf="chatMessages.length > 0 || isChatLoading">
+            <div
+              *ngFor="let message of chatMessages"
+              class="message"
+              [class.user-message]="!message.isBot"
+              [class.bot-message]="message.isBot">
+              <div class="message-bubble">
+                {{ message.text }}
+              </div>
+            </div>
+
+            <!-- Typing Indicator (3 puntos) -->
+            <div class="message bot-message" *ngIf="isChatLoading">
+              <div class="message-bubble typing-indicator">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
             </div>
           </div>
+
         </div>
 
-        <!-- Empty State -->
-        <div class="chat-empty" *ngIf="chatMessages.length === 0">
-          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-          </svg>
-          <p>¿Tienes preguntas? Estoy aquí para ayudarte</p>
-        </div>
-
-        <!-- Suggested Messages -->
-        <div class="suggested-messages" *ngIf="chatMessages.length === 0">
+        <!-- Suggested Messages (solo cuando no hay mensajes) -->
+        <div class="suggested-messages" *ngIf="chatMessages.length === 1 && !isChatLoading">
           <button
             *ngFor="let message of suggestedMessages"
             class="suggested-btn"
-            (click)="selectSuggestedMessage(message)"
-          >
+            (click)="selectSuggestedMessage(message)">
             {{ message }}
           </button>
         </div>
@@ -138,8 +150,11 @@
             placeholder="Escribe tu pregunta..."
             [(ngModel)]="chatbotQuestion"
             (keyup.enter)="sendChatbotQuestion()"
-          />
-          <button (click)="sendChatbotQuestion()" class="btn-send" [disabled]="!chatbotQuestion.trim()">
+            [disabled]="isChatLoading" />
+          <button
+            (click)="sendChatbotQuestion()"
+            class="btn-send"
+            [disabled]="!chatbotQuestion.trim() || isChatLoading">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="22" y1="2" x2="11" y2="13"></line>
               <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>

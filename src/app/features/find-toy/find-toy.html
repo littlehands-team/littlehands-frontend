@@ -1,0 +1,142 @@
+<!-- find-toy.html -->
+<div class="find-toy-container">
+
+  <!-- Fondo animado con nubes -->
+  <div class="sky-background">
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+    <div class="cloud cloud-3"></div>
+    <div class="sun"></div>
+  </div>
+
+  <div class="content">
+
+    <!-- Pantalla de inicio -->
+    <div *ngIf="step === 0" class="welcome-screen animate-fade-in">
+      <div class="welcome-content">
+        <h1 class="welcome-title">
+          🎈 Encuentra tu Juguete Ideal 🎈
+        </h1>
+        <p class="welcome-subtitle">
+          Responde unas preguntas divertidas y te ayudaré a encontrar el juguete perfecto
+        </p>
+        <button class="start-button" (click)="handleStart()">
+          <span>¡Comenzar la aventura!</span>
+          <span class="button-emoji">🚀</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Preguntas del formulario -->
+    <div *ngIf="step >= 1 && step <= questions.length" class="question-screen animate-slide-in">
+      <div class="progress-bar">
+        <div
+          class="progress-fill"
+          [style.width.%]="getProgressPercentage()"
+        ></div>
+      </div>
+
+      <div class="question-container" *ngIf="getCurrentQuestion() as question">
+        <div class="question-emoji">{{ question.emoji }}</div>
+        <h2 class="question-text">{{ question.question }}</h2>
+
+        <div class="options-grid">
+          <button
+            *ngFor="let option of question.options"
+            class="option-button"
+            (click)="handleAnswer(question.id, option)"
+          >
+            {{ option }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat con recomendaciones -->
+    <div *ngIf="step === 6" class="chat-screen animate-fade-in">
+
+      <!-- Header del chat -->
+      <div class="chat-header">
+        <div class="chat-avatar">🧑</div>
+        <div>
+          <h3>Asistente de Juguetes</h3>
+          <p class="status">En línea</p>
+        </div>
+      </div>
+
+      <!-- Mensajes del chat -->
+      <div class="chat-messages">
+        <div
+          *ngFor="let msg of chatMessages"
+          class="message"
+          [ngClass]="msg.isBot ? 'bot-message' : 'user-message'"
+        >
+          <div class="message-bubble" [innerHTML]="formatBotMessage(msg)">
+          </div>
+        </div>
+
+        <!-- Productos recomendados -->
+        <div *ngIf="showProducts && recommendedProducts.length > 0" class="products-container">
+          <div
+            *ngFor="let product of recommendedProducts"
+            class="product-card-chat"
+          >
+            <img [src]="product.image_url" [alt]="product.name" />
+            <div class="product-info">
+              <h4>{{ product.name }}</h4>
+              <div class="product-price">
+                <span class="final-price">
+                  S/ {{ calculateFinalPrice(product) }}
+                </span>
+                <span
+                  *ngIf="product.discount_percentage > 0"
+                  class="original-price"
+                >
+                  S/ {{ product.price }}
+                </span>
+              </div>
+              <button
+                class="product-action-btn"
+                [ngClass]="!product.is_active ? 'whatsapp-btn' : ''"
+                (click)="handleProductClick(product)"
+              >
+                <ng-container *ngIf="product.is_active">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                  </svg>
+                  Ver en tienda
+                </ng-container>
+                <ng-container *ngIf="!product.is_active">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                  </svg>
+                  Consultar por WhatsApp
+                </ng-container>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input del chat -->
+      <div class="chat-input">
+        <input
+          type="text"
+          [(ngModel)]="userMessage"
+          (keypress)="onKeyPress($event)"
+          placeholder="Escribe tu mensaje..."
+        />
+        <button (click)="handleSendMessage()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+</div>

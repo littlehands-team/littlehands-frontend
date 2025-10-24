@@ -8,6 +8,8 @@ import { Product} from '../../../shared/models/product.model';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import {ChatService} from '../../../core/services/chat.service';
+import { Message} from '../../../shared/models/message.model';
 
 
 @Component({
@@ -41,7 +43,14 @@ export class ProductDetail implements OnInit {
   chatbotQuestion: string = '';
 
   // Mensajes del chat
-  chatMessages: Array<{text: string, isUser: boolean, timestamp: Date}> = [];
+  chatMessages: Message[] = [
+    {
+      text: 'Hola! ¿En qué puedo ayudarte?',
+      isBot: true,
+      timestamp: new Date()
+    }
+  ];
+  isChatLoading = false;
 
   // Mensajes sugeridos predefinidos
   suggestedMessages: string[] = [
@@ -65,7 +74,8 @@ export class ProductDetail implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private productService: ProductService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private chatService: ChatService
   ) {}
 
   ngOnInit(): void {
@@ -79,6 +89,60 @@ export class ProductDetail implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  selectSuggestedMessage(message: string): void {
+    this.chatbotQuestion = message;
+    this.sendChatbotQuestion();
+  }
+
+  sendChatbotQuestion(): void {
+    if (!this.chatbotQuestion.trim()) return;
+
+    // Agregar mensaje del usuario
+    this.chatMessages.push({
+      text: this.chatbotQuestion,
+      isBot: false,
+      timestamp: new Date()
+    });
+
+    const userQuestion = this.chatbotQuestion;
+    this.chatbotQuestion = '';
+    this.isChatLoading = true;
+
+    // Scroll al final
+    this.scrollChatToBottom();
+
+    this.chatService.sendMessage(userQuestion, this.chatMessages).subscribe({
+      next: (botResponse) => {
+        this.isChatLoading = false;
+        this.chatMessages.push({
+          text: botResponse,
+          isBot: true,
+          timestamp: new Date()
+        });
+        this.scrollChatToBottom();
+      },
+      error: (error) => {
+        console.error('Error al enviar mensaje:', error);
+        this.isChatLoading = false;
+        this.chatMessages.push({
+          text: 'Lo siento, hubo un error al procesar tu mensaje. Por favor, intenta nuevamente.',
+          isBot: true,
+          timestamp: new Date()
+        });
+        this.scrollChatToBottom();
+      }
+    });
+  }
+
+  private scrollChatToBottom(): void {
+    setTimeout(() => {
+      const chatContainer = document.querySelector('.chat-messages');
+      if (chatContainer) {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+    }, 100);
   }
 
   loadProduct(slug: string): void {
@@ -164,11 +228,6 @@ export class ProductDetail implements OnInit {
     alert(`${this.quantity} producto(s) añadido(s) al carrito`);
   }
 
-  // Chatbot
-  toggleChatbot(): void {
-    this.chatbotOpen = !this.chatbotOpen;
-  }
-
   // Navegación
   viewProductDetail(product: Product) {
     this.router.navigate(['/tienda/producto', product.slug]);
@@ -188,47 +247,6 @@ export class ProductDetail implements OnInit {
     event.stopPropagation(); // Evitar que se active el click del card
     console.log('Agregar al carrito:', product);
     // TODO: Implementar lógica de carrito
-  }
-
-  selectSuggestedMessage(message: string): void {
-    this.chatbotQuestion = message;
-    this.sendChatbotQuestion();
-  }
-
-  sendChatbotQuestion(): void {
-    if (!this.chatbotQuestion.trim()) return;
-
-    // Agregar mensaje del usuario
-    this.chatMessages.push({
-      text: this.chatbotQuestion,
-      isUser: true,
-      timestamp: new Date()
-    });
-
-    const userQuestion = this.chatbotQuestion;
-    this.chatbotQuestion = '';
-
-    // Simular "escribiendo..." y respuesta del bot después de 1 segundo
-    setTimeout(() => {
-      const randomResponse = this.botResponses[Math.floor(Math.random() * this.botResponses.length)];
-      this.chatMessages.push({
-        text: randomResponse,
-        isUser: false,
-        timestamp: new Date()
-      });
-
-      // Scroll al final del chat
-      this.scrollChatToBottom();
-    }, 1000);
-  }
-
-  private scrollChatToBottom(): void {
-    setTimeout(() => {
-      const chatContainer = document.querySelector('.chat-messages');
-      if (chatContainer) {
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-      }
-    }, 100);
   }
 
   // Calcular precio final

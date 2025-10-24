@@ -12,6 +12,7 @@ export interface ChatRequest {
     isBot: boolean;
   }>;
   memoryBank: any[];
+  answers?: any;
 }
 
 export interface ChatResponse {
