@@ -121,6 +121,13 @@
             </div>
           </div>
         </ng-container>
+        <div *ngIf="isTyping" class="message bot-message">
+          <div class="message-bubble typing-indicator">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+          </div>
+        </div>
       </div>
 
       <!-- Input del chat -->

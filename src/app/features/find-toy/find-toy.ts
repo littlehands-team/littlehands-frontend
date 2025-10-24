@@ -36,6 +36,7 @@ export class FindToy implements OnInit {
 
   chatMessages: Message[] = [];
   userMessage: string = '';
+  isTyping: boolean = false;
 
   // Preguntas del formulario
   questions: Question[] = [
@@ -107,6 +108,7 @@ export class FindToy implements OnInit {
       isBot: true,
       timestamp: new Date()
     };
+    this.isTyping = false;
 
     this.chatMessages = [initialMessage];
   }
@@ -137,11 +139,16 @@ export class FindToy implements OnInit {
     const messageText = this.userMessage;
     this.userMessage = '';
 
+    // ← ACTIVAR indicador de "escribiendo"
+    this.isTyping = true;
+    this.scrollToBottom();
+
     // Llamar al backend Gemini
     this.chatService
       .sendRecommendToyMessage(messageText, this.chatMessages, this.answers)
       .subscribe({
         next: (response: any) => {
+          this.isTyping = false;
           let botText: string = '';
           let productsFromAI: Product[] = [];
 
@@ -179,6 +186,7 @@ export class FindToy implements OnInit {
           this.scrollToBottom();
         },
         error: (err) => {
+          this.isTyping = false;
           console.error('Error comunicando con IA:', err);
           const errorResponse: Message = {
             text: 'Lo siento, tuve un problema al procesar tu mensaje. Intenta de nuevo. 😔',
