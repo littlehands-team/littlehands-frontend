@@ -52,23 +52,11 @@ export class ProductDetail implements OnInit {
   ];
   isChatLoading = false;
 
-  // Mensajes sugeridos predefinidos
+  // 🧠 Opción especial para solicitar una guía Montessori personalizada
   suggestedMessages: string[] = [
-    '¿Es seguro para niños pequeños?',
-    '¿Qué habilidades desarrolla este juguete?'
+    '🧩 Solicitar guía de uso Montessori personalizada'
   ];
 
-  // Respuestas genéricas del bot
-  private botResponses: string[] = [
-    'Este juguete está diseñado siguiendo los principios Montessori, fomentando el aprendizaje autónomo y la creatividad de los niños.',
-    'Todos nuestros productos están fabricados con materiales naturales y no tóxicos, seguros para los más pequeños.',
-    'Este juguete ayuda a desarrollar la motricidad fina, coordinación ojo-mano y resolución de problemas.',
-    'Recomendamos supervisión de un adulto durante el juego, especialmente para niños menores de 3 años.',
-    'La edad recomendada está indicada en la ficha del producto. Cada juguete está diseñado para un rango de edad específico.',
-    'Nuestros juguetes de madera son duraderos y pueden limpiarse con un paño húmedo. Evitar sumergir en agua.',
-    'Todos nuestros productos cumplen con las normativas europeas de seguridad EN71.',
-    'El envío suele tardar entre 3-5 días laborables dentro de la península.'
-  ];
 
   constructor(
     private route: ActivatedRoute,
@@ -99,6 +87,11 @@ export class ProductDetail implements OnInit {
   sendChatbotQuestion(): void {
     if (!this.chatbotQuestion.trim()) return;
 
+    if (!this.product) {
+      console.error('No hay producto cargado');
+      return;
+    }
+
     // Agregar mensaje del usuario
     this.chatMessages.push({
       text: this.chatbotQuestion,
@@ -113,7 +106,7 @@ export class ProductDetail implements OnInit {
     // Scroll al final
     this.scrollChatToBottom();
 
-    this.chatService.sendMessage(userQuestion, this.chatMessages).subscribe({
+    this.chatService.sendProductMessage(userQuestion, this.chatMessages, this.product).subscribe({
       next: (botResponse) => {
         this.isChatLoading = false;
         this.chatMessages.push({
@@ -144,6 +137,28 @@ export class ProductDetail implements OnInit {
       }
     }, 100);
   }
+
+  formatBotMessage(msg: Message): string {
+    // Si es mensaje del usuario, mostrar texto plano
+    if (!msg.isBot) return msg.text;
+
+    // 🔹 Convertir Markdown básico a HTML
+    let formatted = msg.text
+      // Negrita: **texto**
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      // Cursiva: *texto*
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      // Saltos de línea (\n o \r\n)
+      .replace(/\n/g, '<br>');
+
+    // 🔹 Escapar etiquetas HTML no deseadas (básico)
+    formatted = formatted.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    formatted = formatted
+      .replace(/&lt;(\/?(?:strong|em|br))&gt;/g, '<$1>'); // permite solo estas etiquetas
+
+    return formatted;
+  }
+
 
   loadProduct(slug: string): void {
     this.loading = true;

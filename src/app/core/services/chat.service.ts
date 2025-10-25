@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ChatRequest, ChatResponse, Message } from '../../shared/models/message.model';
 import {Answers} from '../../shared/models/Answers.model';
+import {Product} from '../../shared/models/product.model';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,30 @@ export class ChatService {
       .pipe(
         map(response => response.botMessage)
       );
+  }
+
+  sendProductMessage(
+    currentMessage: string,
+    previousMessages: Message[],
+    currentProduct: Product
+  ): Observable<string> {
+
+    const payload: ChatRequest = {
+      currentMessage: currentMessage,
+      previousMessages: previousMessages.map(msg => ({
+        text: msg.text,
+        isBot: msg.isBot
+      })),
+      memoryBank: [],
+      currentProduct: currentProduct
+    };
+
+    return this.http.post<ChatResponse>(
+      `${this.apiUrl}/chat/product-detail/`,
+      payload
+    ).pipe(
+      map(response => response.botMessage)
+    );
   }
 
   sendRecommendToyMessage(

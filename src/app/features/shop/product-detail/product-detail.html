@@ -117,7 +117,7 @@
               [class.user-message]="!message.isBot"
               [class.bot-message]="message.isBot">
               <div class="message-bubble">
-                {{ message.text }}
+                <div [innerHTML]="formatBotMessage(message)"></div>
               </div>
             </div>
 

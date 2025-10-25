@@ -16,6 +16,7 @@ export interface ChatRequest {
   }>;
   memoryBank: any[];
   answers?: any;
+  currentProduct?: any;
 }
 
 export interface ChatResponse {
