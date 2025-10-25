@@ -67,13 +67,30 @@ export class CartService {
   }
 
 
-  // 🔹 Eliminar producto
+  // 🔹 Eliminar producto del carrito (backend o localStorage)
   removeCartItem(productId: number): Observable<any> {
-    return this.http.request('delete', this.apiUrl, { body: { product_id: productId } }).pipe(
-      catchError(err => {
-        console.warn('⚠️ Eliminando producto local.');
+    const userId = this.crypto.getCurrentUserId();
+
+    // ⚠️ Si no hay usuario autenticado → eliminar solo en localStorage
+    if (!userId) {
+      console.warn('⚠️ Usuario no autenticado, eliminando en localStorage.');
+      this.removeCartItemLocal(productId);
+      return of({ message: 'Producto eliminado del carrito local.' });
+    }
+
+    // ✅ Si hay usuario, intentar eliminar desde backend
+    const body = { user_id: userId, product_id: productId };
+
+    return this.http.request<any>('delete', `${this.apiUrl}`, { body }).pipe(
+      map(res => {
+        // También eliminar del localStorage para mantener sincronizado
         this.removeCartItemLocal(productId);
-        return of({ message: 'Producto eliminado del carrito local.' });
+        return res;
+      }),
+      catchError(err => {
+        console.warn('⚠️ Error al eliminar en backend, usando localStorage.', err);
+        this.removeCartItemLocal(productId);
+        return of({ message: 'Producto eliminado del carrito local (fallback).' });
       })
     );
   }
@@ -88,11 +105,12 @@ export class CartService {
       return of({ message: 'Cantidad actualizada en carrito local.' });
     }
 
-    const body = { user_id: userId, cart_item_id: cartItemId, quantity: newQuantity };
+    // 🔸 El backend espera "item_id", no "cart_item_id"
+    const body = { user_id: userId, item_id: cartItemId, quantity: newQuantity };
 
     return this.http.put<any>(`${this.apiUrl}`, body).pipe(
       map(res => {
-        // Actualizamos también el localStorage
+        // ✅ Si el backend responde correctamente, también actualizamos el localStorage
         this.updateCartItemQuantityLocal(cartItemId, newQuantity);
         return res;
       }),
@@ -104,13 +122,27 @@ export class CartService {
     );
   }
 
-// 🔹 Versión local (solo actualiza el storage)
+  // 🔹 Versión local (solo actualiza el storage)
   private updateCartItemQuantityLocal(cartItemId: number, newQuantity: number): void {
     const items = this.getCartItemsLocal();
     const item = items.find(i => i.id === cartItemId || i.product.id === cartItemId);
-    if (item) item.quantity = newQuantity;
-    this.saveCartItemsLocal(items);
+
+    if (item) {
+      if (newQuantity <= 0) {
+        // ✅ Validamos que el id del producto exista antes de eliminar
+        const productId = item.product?.id;
+        if (productId !== undefined && productId !== null) {
+          this.removeCartItemLocal(productId);
+        } else {
+          console.warn('⚠️ No se pudo eliminar item local: product.id indefinido.');
+        }
+      } else {
+        item.quantity = newQuantity;
+        this.saveCartItemsLocal(items);
+      }
+    }
   }
+
 
 
   // =============================

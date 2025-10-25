@@ -84,69 +84,78 @@ export class Cart implements OnInit {
     return this.activeItemsCount > 0;
   }
 
-  // Aumentar cantidad
+  // ✅ Aumentar cantidad
   increaseQuantity(item: CartItem): void {
     if (!item.product.is_active) return;
 
-    this.updatingItem = item.id || null;
+    this.updatingItem = item.id || item.product.id || null;
     const newQuantity = item.quantity + 1;
 
-    this.cartService.updateCartItemQuantity(item.id!, newQuantity).subscribe({
-      next: () => {
+    // 🔹 Llamar servicio (usa backend o localStorage automáticamente)
+    this.cartService.updateCartItemQuantity(item.id ?? item.product.id!, newQuantity).subscribe({
+      next: (res) => {
+        console.log('✅ Cantidad aumentada:', res);
         item.quantity = newQuantity;
         this.updatingItem = null;
       },
       error: (err) => {
-        console.error('Error actualizando cantidad:', err);
+        console.error('❌ Error actualizando cantidad:', err);
         this.updatingItem = null;
       }
     });
   }
 
-  // Disminuir cantidad
+  // ✅ Disminuir cantidad
   decreaseQuantity(item: CartItem): void {
     if (!item.product.is_active || item.quantity <= 1) return;
 
-    this.updatingItem = item.id || null;
+    this.updatingItem = item.id || item.product.id || null;
     const newQuantity = item.quantity - 1;
 
-    this.cartService.updateCartItemQuantity(item.id!, newQuantity).subscribe({
-      next: () => {
+    this.cartService.updateCartItemQuantity(item.id ?? item.product.id!, newQuantity).subscribe({
+      next: (res) => {
+        console.log('✅ Cantidad reducida:', res);
         item.quantity = newQuantity;
         this.updatingItem = null;
       },
       error: (err) => {
-        console.error('Error actualizando cantidad:', err);
+        console.error('❌ Error actualizando cantidad:', err);
         this.updatingItem = null;
       }
     });
   }
 
-  // Eliminar item del carrito
+  // ✅ Eliminar item del carrito (funciona con backend o localStorage)
   removeItem(item: CartItem): void {
-    if (!item.id) {
-      console.error('Item sin ID, no se puede eliminar');
+    const itemId = item.id ?? item.product.id; // soporte para localStorage
+    if (!itemId) {
+      console.error('❌ Item sin ID válido, no se puede eliminar');
       return;
     }
 
-    // Confirmación
-    if (!confirm(`¿Estás seguro de eliminar "${item.product.name}" del carrito?`)) {
-      return;
-    }
+    // Confirmación con nombre del producto
+    if (!confirm(`🗑️ ¿Eliminar "${item.product.name}" del carrito?`)) return;
 
-    this.updatingItem = item.id;
+    this.updatingItem = itemId;
 
-    this.cartService.removeCartItem(item.id).subscribe({
-      next: () => {
-        this.cartItems = this.cartItems.filter(i => i.id !== item.id);
+    this.cartService.removeCartItem(itemId).subscribe({
+      next: (res) => {
+        console.log('✅ Item eliminado:', res);
+
+        // 🔹 Actualizar lista local (elimina del array actual)
+        this.cartItems = this.cartItems.filter(
+          i => (i.id ?? i.product.id) !== itemId
+        );
+
         this.updatingItem = null;
       },
       error: (err) => {
-        console.error('Error eliminando item:', err);
+        console.error('❌ Error eliminando item:', err);
         this.updatingItem = null;
       }
     });
   }
+
 
   // Navegar al producto
   goToProduct(slug: string): void {
@@ -206,8 +215,6 @@ export class Cart implements OnInit {
     // ✅ Abrir WhatsApp en nueva pestaña
     window.open(whatsappUrl, '_blank');
   }
-
-
 
   // Verificar si un item se está actualizando
   isUpdating(itemId: number | undefined): boolean {
