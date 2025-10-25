@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import {ChatService} from '../../../core/services/chat.service';
+import {CartService} from '../../../core/services/cart.service';
 import { Message} from '../../../shared/models/message.model';
 
 
@@ -63,7 +64,8 @@ export class ProductDetail implements OnInit {
     private router: Router,
     private productService: ProductService,
     private sanitizer: DomSanitizer,
-    private chatService: ChatService
+    private chatService: ChatService,
+    private cartService: CartService,
   ) {}
 
   ngOnInit(): void {
@@ -234,13 +236,24 @@ export class ProductDetail implements OnInit {
     this.quantity++;
   }
 
-  // Añadir al carrito
   addToCartMain(): void {
-    if (!this.product) return;
+    if (!this.product?.id) {
+      console.error('❌ No se encontró el ID del producto.');
+      return;
+    }
 
-    console.log(`Añadiendo ${this.quantity} unidad(es) de "${this.product.name}" al carrito`);
-    // TODO: Implementar lógica del carrito
-    alert(`${this.quantity} producto(s) añadido(s) al carrito`);
+    const productId = Number(this.product.id); // asegura que sea número
+
+    this.cartService.addCartItem(productId, this.quantity).subscribe({
+      next: (res) => {
+        console.log(res.message);
+        alert(res.message);
+      },
+      error: (err) => {
+        console.error('Error al agregar al carrito:', err);
+        alert('Hubo un problema al añadir al carrito.');
+      }
+    });
   }
 
   // Navegación

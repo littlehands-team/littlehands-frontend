@@ -53,8 +53,7 @@ export class AppNavbar {
   }
 
   goToCart() {
-    console.log('Ir al carrito');
-    // Navegar al carrito
+    this.router.navigate(['/carrito']);
   }
 
   isUserLogged(): boolean {
