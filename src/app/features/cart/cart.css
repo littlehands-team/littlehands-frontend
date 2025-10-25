@@ -43,34 +43,6 @@
 }
 
 /* ============================================ */
-/* HEADER */
-/* ============================================ */
-
-.cart-header {
-  background: white;
-  padding: 2rem;
-  border-radius: 12px;
-  margin-bottom: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.cart-header h1 {
-  margin: 0;
-  font-size: 2rem;
-  color: #333;
-  font-weight: 700;
-}
-
-.cart-count {
-  color: #666;
-  font-size: 1rem;
-  margin: 0;
-}
-
-/* ============================================ */
 /* EMPTY CART */
 /* ============================================ */
 
@@ -428,7 +400,7 @@
 }
 
 .total-price {
-  color: #ffc107;
+  color: black;
   font-size: 1.5rem;
 }
 
@@ -439,7 +411,7 @@
 .btn-primary,
 .btn-checkout {
   width: 100%;
-  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  background: #25D366; /* Verde WhatsApp */
   color: white;
   border: none;
   padding: 1rem;
@@ -447,14 +419,7 @@
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
-}
-
-.btn-primary:hover,
-.btn-checkout:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+  transition: all 0.2s ease-in-out;
 }
 
 .btn-checkout {
@@ -462,11 +427,18 @@
   margin-bottom: 1rem;
 }
 
+/* Hover más vivo */
+.btn-checkout:hover:not(:disabled) {
+  background: #20b558; /* tono más oscuro al pasar el mouse */
+}
+
 .btn-checkout:disabled {
   background: #ccc;
   cursor: not-allowed;
   box-shadow: none;
+  transform: none;
 }
+
 
 .btn-continue-shopping {
   width: 100%;

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from './environment';
 import * as CryptoJS from 'crypto-js';
+import { User} from '../../shared/models/user.model';
 
 
 @Injectable({
@@ -22,6 +23,19 @@ export class CryptoService {
       return JSON.parse(decryptedJson) as T;
     } catch (e) {
       console.error('Error al desencriptar:', e);
+      return null;
+    }
+  }
+
+  getCurrentUser(): User | null {
+    const encryptedUser = localStorage.getItem('hh-current-user');
+    if (!encryptedUser) return null;
+
+    try {
+      const decrypted = this.decrypt<{ token: string; user: User }>(encryptedUser);
+      return decrypted?.user ?? null;
+    } catch (error) {
+      console.error('Error al desencriptar usuario:', error);
       return null;
     }
   }

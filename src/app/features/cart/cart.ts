@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { CartService } from '../../core/services/cart.service';
 import { CartItem } from '../../shared/models/cart-item.model';
 import { Product } from '../../shared/models/product.model';
+import {CryptoService} from '../../core/services/crypto.service';
 
 @Component({
   selector: 'app-cart',
@@ -20,7 +21,8 @@ export class Cart implements OnInit {
 
   constructor(
     private cartService: CartService,
-    private router: Router
+    private router: Router,
+    private cryptoService: CryptoService
   ) {}
 
   ngOnInit(): void {
@@ -158,11 +160,54 @@ export class Cart implements OnInit {
 
   // Proceder al checkout
   proceedToCheckout(): void {
+    const currentUser = this.cryptoService.getCurrentUser();
     if (!this.hasActiveProducts) return;
 
-    // TODO: Implementar lógica de checkout
-    this.router.navigate(['/checkout']);
+    const activeCartItems = this.cartItems.filter(item => item.product.is_active);
+    const total = activeCartItems.reduce(
+      (sum, item) => sum + this.calculateItemSubtotal(item),
+      0
+    );
+
+    if (activeCartItems.length === 0) {
+      alert('No hay productos activos para comprar.');
+      return;
+    }
+
+    // ✅ Generar mensaje de WhatsApp
+    let message = '🛒 *Nuevo pedido desde HappyHands*\n\n';
+    activeCartItems.forEach((item, i) => {
+      message += `#${i + 1}. *${item.product.name}*\n`;
+      message += `Cantidad: ${item.quantity}\n`;
+      message += `Subtotal: S/ ${this.calculateItemSubtotal(item).toFixed(2)}\n\n`;
+    });
+
+    message += `*Total: S/ ${total.toFixed(2)}*\n\n`;
+
+    // ✅ Agregar información del cliente
+    if (currentUser) {
+      const name =
+        `${currentUser.first_name || ''} ${currentUser.last_name || ''}`.trim() || 'Cliente registrado';
+      const email = currentUser.email ? ` (${currentUser.email})` : '';
+      message += `👤 Cliente: ${name}${email}\n`;
+    } else {
+      message += '👤 Cliente: Invitado (no registrado)\n';
+    }
+
+    message += '\nPor favor confirmar la disponibilidad de los productos. 🙌';
+
+    // ✅ Número de WhatsApp de la empresa (con código de país)
+    const phoneNumber = '51924052944';
+
+    // ✅ Crear URL de WhatsApp
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+    // ✅ Abrir WhatsApp en nueva pestaña
+    window.open(whatsappUrl, '_blank');
   }
+
+
 
   // Verificar si un item se está actualizando
   isUpdating(itemId: number | undefined): boolean {
