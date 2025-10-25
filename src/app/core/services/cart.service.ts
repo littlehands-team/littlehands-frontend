@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from './environment';
-import {Observable, of, tap} from 'rxjs';
+import { BehaviorSubject, Observable, of, tap } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { CartItem} from '../../shared/models/cart-item.model';
 import { CryptoService} from './crypto.service';
@@ -12,8 +12,12 @@ import { CryptoService} from './crypto.service';
 export class CartService {
   private apiUrl = `${environment.apiUrl}/cart/`;
   private localKey = 'hh-cart-items';
+  private cartCountSubject = new BehaviorSubject<number>(0);
+  cartCount$ = this.cartCountSubject.asObservable(); // 👈 suscribible desde AppNavbar
 
-  constructor(private http: HttpClient, private crypto: CryptoService) {}
+  constructor(private http: HttpClient, private crypto: CryptoService) {
+    this.syncCartCount();
+  }
 
   // 🔹 Ver carrito desde backend o localStorage
   getCartItems(): Observable<CartItem[]> {
@@ -56,11 +60,13 @@ export class CartService {
         if (response && !response.error) {
           console.log('✅ Producto añadido correctamente al backend.');
           this.addCartItemLocal(productId, quantity);
+          this.syncCartCount();
         }
       }),
       catchError(err => {
         console.warn('⚠️ Error con backend, guardando en localStorage.');
         this.addCartItemLocal(productId, quantity);
+        this.syncCartCount();
         return of({ message: 'Producto añadido al carrito (local).' });
       })
     );
@@ -85,11 +91,13 @@ export class CartService {
       map(res => {
         // También eliminar del localStorage para mantener sincronizado
         this.removeCartItemLocal(itemId);
+        this.syncCartCount();
         return res;
       }),
       catchError(err => {
         console.warn('⚠️ Error al eliminar en backend, usando localStorage.', err);
         this.removeCartItemLocal(itemId);
+        this.syncCartCount();
         return of({ message: 'Producto eliminado del carrito local (fallback).' });
       })
     );
@@ -113,11 +121,13 @@ export class CartService {
       map(res => {
         // ✅ Si el backend responde correctamente, también actualizamos el localStorage
         this.updateCartItemQuantityLocal(cartItemId, newQuantity);
+        this.syncCartCount();
         return res;
       }),
       catchError(err => {
         console.warn('⚠️ Error al actualizar en backend, usando localStorage.', err);
         this.updateCartItemQuantityLocal(cartItemId, newQuantity);
+        this.syncCartCount();
         return of({ message: 'Cantidad actualizada en carrito local (fallback).' });
       })
     );
@@ -183,5 +193,15 @@ export class CartService {
 
   clearCartLocal(): void {
     localStorage.removeItem(this.localKey);
+  }
+
+  // =============================
+  // 🔁 Sincronización del contador
+  // =============================
+
+  syncCartCount(): void {
+    const items = this.getCartItemsLocal();
+    const count = items.reduce((sum, i) => sum + (i.quantity || 1), 0);
+    this.cartCountSubject.next(count);
   }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -11,6 +11,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import {CryptoService} from '../../../core/services/crypto.service';
+import {CartService} from '../../../core/services/cart.service';
 
 
 @Component({
@@ -31,12 +32,23 @@ import {CryptoService} from '../../../core/services/crypto.service';
   templateUrl: './app-navbar.html',
   styleUrl: './app-navbar.css'
 })
-export class AppNavbar {
-  cartItemsCount = 3; // Esto debería venir de un servicio
+export class AppNavbar implements OnInit {
+  cartItemsCount = 0;
   menuOpened = false;
   searchQuery = '';
 
-  constructor(private router: Router, private cryptoService: CryptoService) { }
+  constructor(private router: Router, private cryptoService: CryptoService,
+              private cartService: CartService) { }
+
+  ngOnInit(): void {
+    this.cartService.cartCount$.subscribe(count => {
+      this.cartItemsCount = count;
+    });
+
+    // 👇 Esto sincroniza el valor inicial (por si se recarga la página)
+    this.cartService.syncCartCount();
+  }
+
 
   onSearch() {
     console.log('Buscando:', this.searchQuery);
