@@ -67,33 +67,34 @@ export class CartService {
   }
 
 
-  // 🔹 Eliminar producto del carrito (backend o localStorage)
-  removeCartItem(productId: number): Observable<any> {
+  // ✅ Eliminar producto del carrito (backend o localStorage)
+  removeCartItem(itemId: number): Observable<any> {
     const userId = this.crypto.getCurrentUserId();
 
     // ⚠️ Si no hay usuario autenticado → eliminar solo en localStorage
     if (!userId) {
       console.warn('⚠️ Usuario no autenticado, eliminando en localStorage.');
-      this.removeCartItemLocal(productId);
+      this.removeCartItemLocal(itemId);
       return of({ message: 'Producto eliminado del carrito local.' });
     }
 
-    // ✅ Si hay usuario, intentar eliminar desde backend
-    const body = { user_id: userId, product_id: productId };
+    // ✅ Si hay usuario, eliminar desde backend
+    const body = { item_id: itemId };
 
     return this.http.request<any>('delete', `${this.apiUrl}`, { body }).pipe(
       map(res => {
         // También eliminar del localStorage para mantener sincronizado
-        this.removeCartItemLocal(productId);
+        this.removeCartItemLocal(itemId);
         return res;
       }),
       catchError(err => {
         console.warn('⚠️ Error al eliminar en backend, usando localStorage.', err);
-        this.removeCartItemLocal(productId);
+        this.removeCartItemLocal(itemId);
         return of({ message: 'Producto eliminado del carrito local (fallback).' });
       })
     );
   }
+
 
   // 🔹 Actualizar cantidad de un producto en el carrito
   updateCartItemQuantity(cartItemId: number, newQuantity: number): Observable<any> {
