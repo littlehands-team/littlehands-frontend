@@ -88,9 +88,19 @@
           </label>
         </div>
 
-        <button type="submit" class="btn-register" [disabled]="registerForm.invalid">
-          REGISTRARSE
+        <button
+          type="submit"
+          class="btn-register"
+          [disabled]="registerForm.invalid || isLoading"
+        >
+          <ng-container *ngIf="!isLoading; else loadingSpinner">
+            REGISTRARSE
+          </ng-container>
+          <ng-template #loadingSpinner>
+            <mat-spinner diameter="20"></mat-spinner>
+          </ng-template>
         </button>
+
 
       </form>
     </div>

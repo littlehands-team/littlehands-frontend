@@ -36,8 +36,18 @@
           </div>
         </div>
 
-        <button type="submit" class="btn-login" [disabled]="loginForm.invalid">
-          INICIAR SESIÓN
+        <button
+          type="submit"
+          class="btn-login"
+          [disabled]="loginForm.invalid || isLoading"
+        >
+          <ng-container *ngIf="!isLoading; else loadingTpl">
+            INICIAR SESIÓN
+          </ng-container>
+
+          <ng-template #loadingTpl>
+            <mat-spinner color="accent" class="white-spinner"></mat-spinner>
+          </ng-template>
         </button>
 
         <div class="remember-section">

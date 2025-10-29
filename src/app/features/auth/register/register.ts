@@ -6,6 +6,7 @@ import { UserService } from '../../../core/services/user.service';
 import { RegisterRequest } from '../../../shared/models/register-request.model';
 import {NgToastComponent, NgToastService} from 'ng-angular-popup';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-register',
@@ -14,7 +15,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     ReactiveFormsModule,
     FormsModule,
     RouterLink,
-    NgToastComponent
+    NgToastComponent,
+    MatProgressSpinnerModule
   ],
   templateUrl: './register.html',
   styleUrl: './register.css'
@@ -22,6 +24,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class Register {
   registerForm: FormGroup;
   showPassword: boolean = false;
+  isLoading: boolean = false;
   private _snackBar = inject(MatSnackBar);
 
   constructor(
@@ -65,6 +68,8 @@ export class Register {
     }
 
     if (this.registerForm.valid) {
+      this.isLoading = true;
+
       const formData = this.registerForm.value;
 
       const registerRequest: RegisterRequest = {
@@ -76,17 +81,27 @@ export class Register {
 
       console.log('Payload para API:', registerRequest);
 
-      this.userService.register(registerRequest).subscribe((response) => {
-        if (response.success) {
-          this.toast.success(response.message, 'Registro exitoso', 3000);
-          this.router.navigate(['/auth/login']);
-          this.openSnackBar();
-        } else {
-          this.toast.danger(response.message, 'Error', 3000);
-        }
+      this.userService.register(registerRequest).subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.toast.success(response.message, 'Registro exitoso', 3000);
+            this.router.navigate(['/auth/login']);
+            this.openSnackBar();
+          } else {
+            this.toast.danger(response.message, 'Error', 3000);
+          }
+        },
+        error: (err) => {
+          console.error('Error en el registro:', err);
+          this.toast.danger('Ocurrió un error en el registro', 'Error', 3000);
+        },
+        complete: () => {
+          this.isLoading = false;
+        },
       });
     }
   }
+
   openSnackBar() {
     this._snackBar.open('Usuario registrado existosamente', 'Cerrar',{
       horizontalPosition: 'center',

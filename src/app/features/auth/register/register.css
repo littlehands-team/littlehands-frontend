@@ -110,27 +110,34 @@
 /* Botones */
 .btn-register {
   width: 100%;
-  padding: 14px;
+  padding: 12px;
   background-color: #aec5b5;
   color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 14px;
   font-weight: 600;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  margin-top: 10px;
+  border: none;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.2s ease;
 }
 
 .btn-register:hover:not(:disabled) {
-  background-color: #9ab3a4;
+  background-color: #9cb6a6;
 }
 
 .btn-register:disabled {
-  background-color: #ccc;
+  opacity: 0.7;
   cursor: not-allowed;
 }
+
+mat-spinner {
+  width: 20px !important;
+  height: 20px !important;
+  stroke: white !important;
+}
+
 
 .btn-login {
   padding: 14px 40px;

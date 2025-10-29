@@ -11,6 +11,8 @@ import { UserService } from '../../../core/services/user.service';
 import { NgToastService } from 'ng-angular-popup';
 import { CryptoService } from '../../../core/services/crypto.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { finalize } from 'rxjs/operators';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 interface RememberMeData {
   email: string;
@@ -31,12 +33,14 @@ interface RememberMeData {
     FormsModule,
     NgIf,
     MatIconModule,
+    MatProgressSpinnerModule
   ],
   styleUrl: './login.css'
 })
 export class Login implements OnInit {
   loginForm: FormGroup;
   private readonly REMEMBER_ME_KEY = 'lh-remember-me';
+  isLoading: boolean = false;
   private _snackBar = inject(MatSnackBar);
 
   constructor(
@@ -90,7 +94,8 @@ export class Login implements OnInit {
   }
 
   onLogin() {
-    if (this.loginForm.valid) {
+    if (this.loginForm.valid && !this.isLoading) {
+      this.isLoading = true; // ⏳ Activa loading
       const formValue = this.loginForm.value;
 
       const credentials = {
@@ -98,27 +103,26 @@ export class Login implements OnInit {
         password: formValue.password
       };
 
-      this.userService.login(credentials).subscribe((res) => {
-        if (res.success) {
-          console.log('Login exitoso ✅');
-
-          // Guardar o eliminar credenciales según "Recuérdame"
-          this.saveRememberMeCredentials(
-            formValue.email,
-            formValue.password,
-            formValue.rememberMe
-          );
-
-          this.toast.success('Bienvenido', 'Login exitoso', 3000);
-          this.router.navigate(['/']);
-        } else {
-          this._snackBar.open(res.message, 'Cerrar',{
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom',
-            duration: 3000,
-          });
-        }
-      });
+      this.userService.login(credentials)
+        .pipe(finalize(() => (this.isLoading = false))) // 🔁 Se desactiva al terminar
+        .subscribe((res) => {
+          if (res.success) {
+            console.log('Login exitoso ✅');
+            this.saveRememberMeCredentials(
+              formValue.email,
+              formValue.password,
+              formValue.rememberMe
+            );
+            this.toast.success('Bienvenido', 'Login exitoso', 3000);
+            this.router.navigate(['/']);
+          } else {
+            this._snackBar.open(res.message, 'Cerrar', {
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
+              duration: 3000,
+            });
+          }
+        });
     }
   }
 }
