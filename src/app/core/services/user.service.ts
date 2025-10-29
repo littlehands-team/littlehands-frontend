@@ -7,6 +7,7 @@ import { catchError, map } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
 import { ApiResponse} from '../../shared/models/response.model';
 import { CryptoService } from './crypto.service';
+import {CartService} from './cart.service';
 
 
 @Injectable({
@@ -15,7 +16,7 @@ import { CryptoService } from './crypto.service';
 export class UserService {
   private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient, private crypto: CryptoService) {}
+  constructor(private http: HttpClient, private crypto: CryptoService, private cartService: CartService) {}
 
   // Registro
   register(data: RegisterRequest): Observable<ApiResponse<User>> {
@@ -35,15 +36,22 @@ export class UserService {
     );
   }
 
-  // Login
   login(credentials: { email: string; password: string }): Observable<ApiResponse<{ token: string, user: User }>> {
     return this.http.post<any>(`${this.apiUrl}/login/`, credentials).pipe(
       map((response) => {
         if (response && response.token && response.user) {
 
-          // Guardamos data en el localstorage
+          // Guardamos usuario autenticado
           const currentUser = { token: response.token, user: response.user };
           localStorage.setItem('hh-current-user', this.crypto.encrypt(currentUser));
+
+          // ✅ Guardamos carrito autenticado
+          if (response.cart_items) {
+            localStorage.setItem('hh-auth-cart-items', JSON.stringify(response.cart_items));
+          }
+
+          // ✅ Sincronizamos el contador del carrito
+          this.cartService.syncCartCount();
 
           return {
             success: true,
@@ -55,7 +63,7 @@ export class UserService {
           } as ApiResponse<{ token: string, user: User }>;
         }
 
-        // Caso en el que backend solo devuelve un mensaje (ejemplo: credenciales inválidas)
+        // Si backend devuelve solo mensaje de error
         return {
           success: false,
           message: response.message || 'Credenciales inválidas'
@@ -72,8 +80,10 @@ export class UserService {
 
 
   // Logout
-  logout(): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/users/logout/`, {});
+  logout(): void {
+    localStorage.removeItem('hh-current-user');
+    localStorage.removeItem('hh-auth-cart-items');
+    this.cartService.syncCartCount();
   }
 
   // Obtener lista de usuarios (solo prueba/admin)

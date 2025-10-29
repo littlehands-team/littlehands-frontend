@@ -6,15 +6,6 @@
     <aside class="profile-sidebar">
       <div class="sidebar-title">MI CUENTA</div>
 
-      <ng-container *ngIf="userInfo?.role === 'buyer'">
-        <button
-          class="sidebar-item"
-          [class.active]="activeSection === 'orders'"
-          (click)="setActiveSection('orders')">
-          ▸ MIS PEDIDOS
-        </button>
-      </ng-container>
-
       <!-- Botón: Panel de control -->
       <button
         class="sidebar-item"
@@ -31,14 +22,6 @@
           [class.active]="activeSection === 'products'"
           (click)="setActiveSection('products')">
           ▸ PRODUCTOS
-        </button>
-
-        <!-- Botón: Pedidos de usuarios -->
-        <button
-          class="sidebar-item"
-          [class.active]="activeSection === 'admin-orders'"
-          (click)="setActiveSection('admin-orders')">
-          ▸ PEDIDOS
         </button>
 
       </ng-container>
@@ -88,34 +71,6 @@
                 <button class="link-button">Editar dirección</button>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Orders Section -->
-      <div *ngIf="activeSection === 'orders'" class="orders-section">
-        <h2 class="section-title">MIS PEDIDOS</h2>
-
-        <div class="orders-list">
-          <div *ngFor="let order of orders" class="order-card">
-            <div class="order-header">
-              <span class="order-id">Pedido {{ order.id }}</span>
-              <span class="order-status" [class]="'status-' + order.status">
-                {{ getStatusText(order.status) }}
-              </span>
-            </div>
-
-            <div class="order-details">
-              <p class="order-date">{{ order.date }}</p>
-              <p class="order-items">{{ order.items }} artículos</p>
-              <p class="order-total">Total: S/ {{ order.total.toFixed(2) }}</p>
-            </div>
-
-            <button class="view-order-button">Ver detalles</button>
-          </div>
-
-          <div *ngIf="orders.length === 0" class="empty-orders">
-            <p>No tienes pedidos aún.</p>
           </div>
         </div>
       </div>

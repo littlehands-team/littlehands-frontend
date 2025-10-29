@@ -13,6 +13,7 @@ import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { ProductDialog } from './product-dialog/product-dialog';
+import {UserService} from '../../core/services/user.service';
 
 
 interface Order {
@@ -65,7 +66,8 @@ export class Profile implements OnInit {
   private _snackBar = inject(MatSnackBar);
 
   constructor(private router: Router, private productService: ProductService,
-              private cryptoService: CryptoService, private dialog: MatDialog, ) { }
+              private cryptoService: CryptoService, private dialog: MatDialog,
+              private userService: UserService) { }
 
   ngOnInit(): void {
     this.loadUserData();
@@ -217,10 +219,7 @@ export class Profile implements OnInit {
     const confirmado = window.confirm('¿Estás seguro que quieres cerrar sesión?');
     if (!confirmado) return;
 
-    // Limpia el token
-    localStorage.removeItem('hh-current-user');
-
-    // Redirigir al login
+    this.userService.logout();
     this.router.navigate(['/auth/login']);
   }
 
