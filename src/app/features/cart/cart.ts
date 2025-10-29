@@ -184,7 +184,7 @@ export class Cart implements OnInit {
     }
 
     // ✅ Generar mensaje de WhatsApp
-    let message = '🛒 *Nuevo pedido desde HappyHands*\n\n';
+    let message = '🛒 *Nuevo pedido desde LittleHands*\n\n';
     activeCartItems.forEach((item, i) => {
       message += `#${i + 1}. *${item.product.name}*\n`;
       message += `Cantidad: ${item.quantity}\n`;
@@ -206,7 +206,7 @@ export class Cart implements OnInit {
     message += '\nPor favor confirmar la disponibilidad de los productos. 🙌';
 
     // ✅ Número de WhatsApp de la empresa (con código de país)
-    const phoneNumber = '51924052944';
+    const phoneNumber = '51997311387';
 
     // ✅ Crear URL de WhatsApp
     const encodedMessage = encodeURIComponent(message);
@@ -214,6 +214,36 @@ export class Cart implements OnInit {
 
     // ✅ Abrir WhatsApp en nueva pestaña
     window.open(whatsappUrl, '_blank');
+
+    // ✅ Limpiar carrito después de enviar pedido (solo si backend responde correctamente)
+    const activeItemIds = this.cartItems
+      .filter(item => item.product.is_active)
+      .map(item => item.id)
+      .filter(Boolean) as number[];
+
+    if (activeItemIds.length > 0) {
+      this.cartService.clearCartAfterCheckout(activeItemIds).subscribe({
+        next: (res) => {
+          console.log('🧹', res.message);
+
+          // 🔹 Solo si el backend respondió correctamente
+          if (res && res.message && !res.error) {
+            // Quita los productos eliminados del array local
+            this.cartItems = this.cartItems.filter(
+              item => !activeItemIds.includes(item.id!)
+            );
+
+            console.log('✅ Carrito limpiado correctamente');
+          } else {
+            console.warn('⚠️ No se eliminó el carrito: respuesta inesperada del backend');
+          }
+        },
+        error: (err) => {
+          console.error('❌ Error al limpiar carrito:', err);
+        }
+      });
+    }
+
   }
 
   // Verificar si un item se está actualizando

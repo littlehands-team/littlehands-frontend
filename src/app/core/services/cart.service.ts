@@ -26,7 +26,34 @@ export class CartService {
     // 🧩 Si no hay usuario logueado → usar localStorage
     if (!userId) {
       console.warn('⚠️ Usuario no autenticado, obteniendo carrito local.');
-      return of(this.getCartItemsLocal());
+      const localCart = this.getCartItemsLocal(); // [{ productId, quantity }]
+      if (!localCart || localCart.length === 0) return of([]);
+
+      const productIds = localCart.map(item => item.product.id);
+      const url = `${this.apiUrl}products-by-ids/`;
+
+      return this.http.post<any[]>(url, { product_ids: productIds }).pipe(
+        map(products => {
+          // Mapear los productos con las cantidades locales
+          const cartItems: CartItem[] = localCart.map(item => {
+            const product = products.find(p => p.id === item.product.id);
+            if (!product) return null; // por si algún producto ya no existe
+            return {
+              product,
+              quantity: item.quantity
+            };
+          }).filter(Boolean) as CartItem[]; // eliminar nulls
+          return cartItems;
+        }),
+        catchError(err => {
+          console.warn('⚠️ Error al obtener productos desde backend, devolviendo carrito local.', err);
+          // Retorna carrito local pero sin objeto Product completo
+          return of(localCart.map(item => ({
+            product: { id: item.product.id, name: 'Producto no disponible' } as any,
+            quantity: item.quantity
+          })));
+        })
+      );
     }
 
     // 🧠 Si hay usuario → intentar obtener desde backend
@@ -47,16 +74,18 @@ export class CartService {
   addCartItem(productId: number, quantity: number = 1): Observable<any> {
     const userId = this.crypto.getCurrentUserId();
 
+    // Si no hay usuario logeado, guardar solo en localStorage
     if (!userId) {
-      console.error('Usuario no autenticado');
-      return of({ success: false, data: [] });
+      this.addCartItemLocal(productId, quantity);
+      this.syncCartCount();
+      return of({ success: true, message: 'Producto añadido al carrito de compras.' });
     }
 
+    // Usuario autenticado: enviar al backend
     const body = { user_id: userId, product_id: productId, quantity };
 
     return this.http.post<any>(`${this.apiUrl}`, body).pipe(
       tap((response) => {
-        // ✅ Solo guardar en localStorage si el backend respondió correctamente
         if (response && !response.error) {
           console.log('✅ Producto añadido correctamente al backend.');
           this.addCartItemLocal(productId, quantity);
@@ -72,7 +101,6 @@ export class CartService {
     );
   }
 
-
   // ✅ Eliminar producto del carrito (backend o localStorage)
   removeCartItem(itemId: number): Observable<any> {
     const userId = this.crypto.getCurrentUserId();
@@ -81,6 +109,7 @@ export class CartService {
     if (!userId) {
       console.warn('⚠️ Usuario no autenticado, eliminando en localStorage.');
       this.removeCartItemLocal(itemId);
+      this.syncCartCount();
       return of({ message: 'Producto eliminado del carrito local.' });
     }
 
@@ -103,7 +132,6 @@ export class CartService {
     );
   }
 
-
   // 🔹 Actualizar cantidad de un producto en el carrito
   updateCartItemQuantity(cartItemId: number, newQuantity: number): Observable<any> {
     const userId = this.crypto.getCurrentUserId();
@@ -111,6 +139,7 @@ export class CartService {
     if (!userId) {
       console.warn('⚠️ Usuario no autenticado, actualizando en localStorage.');
       this.updateCartItemQuantityLocal(cartItemId, newQuantity);
+      this.syncCartCount();
       return of({ message: 'Cantidad actualizada en carrito local.' });
     }
 
@@ -154,6 +183,34 @@ export class CartService {
     }
   }
 
+  // 🔹 Vaciar carrito después de compra (backend o local)
+  clearCartAfterCheckout(itemIds: number[]): Observable<any> {
+    const userId = this.crypto.getCurrentUserId();
+
+    // Si no hay usuario, limpiar localStorage directamente
+    if (!userId) {
+      console.warn('⚠️ Usuario no autenticado, limpiando carrito local.');
+      this.clearCartLocal();
+      this.syncCartCount();
+      return of({ message: 'Carrito local vaciado.' });
+    }
+
+    // Backend: eliminar ítems específicos
+    const body = { user_id: userId, item_ids: itemIds };
+
+    return this.http.request<any>('delete', `${this.apiUrl}clear/`, { body }).pipe(
+      tap(() => {
+        this.clearCartLocal(); // sincronizar localmente
+        this.syncCartCount();
+      }),
+      catchError(err => {
+        console.warn('⚠️ Error backend, limpiando carrito local.', err);
+        this.clearCartLocal();
+        this.syncCartCount();
+        return of({ message: 'Carrito local vaciado (fallback).' });
+      })
+    );
+  }
 
 
   // =============================
