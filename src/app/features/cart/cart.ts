@@ -167,7 +167,6 @@ export class Cart implements OnInit {
     this.router.navigate(['/tienda']);
   }
 
-  // Proceder al checkout
   proceedToCheckout(): void {
     const currentUser = this.cryptoService.getCurrentUser();
     if (!this.hasActiveProducts) return;
@@ -183,8 +182,9 @@ export class Cart implements OnInit {
       return;
     }
 
-    // ✅ Generar mensaje de WhatsApp
+    // Generar mensaje
     let message = '🛒 *Nuevo pedido desde LittleHands*\n\n';
+
     activeCartItems.forEach((item, i) => {
       message += `#${i + 1}. *${item.product.name}*\n`;
       message += `Cantidad: ${item.quantity}\n`;
@@ -193,7 +193,6 @@ export class Cart implements OnInit {
 
     message += `*Total: S/ ${total.toFixed(2)}*\n\n`;
 
-    // ✅ Agregar información del cliente
     if (currentUser) {
       const name =
         `${currentUser.first_name || ''} ${currentUser.last_name || ''}`.trim() || 'Cliente registrado';
@@ -203,19 +202,26 @@ export class Cart implements OnInit {
       message += '👤 Cliente: Invitado (no registrado)\n';
     }
 
+    const timestamp = new Date().toLocaleString('es-PE', {
+      timeZone: 'America/Lima',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    message += `📅 ${timestamp}\n`;
     message += '\nPor favor confirmar la disponibilidad de los productos. 🙌';
 
-    // ✅ Número de WhatsApp de la empresa (con código de país)
-    const phoneNumber = '51997311387';
-
-    // ✅ Crear URL de WhatsApp
+    const phoneNumber = '51940396169';
     const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 
-    // ✅ Abrir WhatsApp en nueva pestaña
+    // ✅ USAR API.WHATSAPP.COM - Funciona mejor con números nuevos
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
+
     window.open(whatsappUrl, '_blank');
 
-    // ✅ Limpiar carrito después de enviar pedido (solo si backend responde correctamente)
+    // Limpiar carrito
     const activeItemIds = this.cartItems
       .filter(item => item.product.is_active)
       .map(item => item.id)
@@ -224,18 +230,11 @@ export class Cart implements OnInit {
     if (activeItemIds.length > 0) {
       this.cartService.clearCartAfterCheckout(activeItemIds).subscribe({
         next: (res) => {
-          console.log('🧹', res.message);
-
-          // 🔹 Solo si el backend respondió correctamente
           if (res && res.message && !res.error) {
-            // Quita los productos eliminados del array local
             this.cartItems = this.cartItems.filter(
               item => !activeItemIds.includes(item.id!)
             );
-
             console.log('✅ Carrito limpiado correctamente');
-          } else {
-            console.warn('⚠️ No se eliminó el carrito: respuesta inesperada del backend');
           }
         },
         error: (err) => {
@@ -243,7 +242,6 @@ export class Cart implements OnInit {
         }
       });
     }
-
   }
 
   // Verificar si un item se está actualizando

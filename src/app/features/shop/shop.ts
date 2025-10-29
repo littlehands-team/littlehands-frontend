@@ -9,6 +9,7 @@ import { ProductService } from '../../core/services/product.service';
 import { Product } from '../../shared/models/product.model';
 import { PriceRange } from '../../shared/models/product-shop-response.model';
 import { AgeCategory, AGE_CATEGORY_ORDER} from '../../shared/enums/age.enum';
+import {CartService} from '../../core/services/cart.service';
 
 
 @Component({
@@ -53,7 +54,8 @@ export class Shop implements OnInit {
   constructor(
     private productService: ProductService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cartService: CartService,
   ) {}
 
   ngOnInit() {
@@ -202,8 +204,22 @@ export class Shop implements OnInit {
   }
 
   addToCart(event: Event, product: Product) {
-    event.stopPropagation(); // Evitar que se active el click del card
-    console.log('Agregar al carrito:', product);
-    // TODO: Implementar lógica de carrito
+    if (!product?.id) { // <- corregido
+      console.error('❌ No se encontró el ID del producto.');
+      return;
+    }
+
+    const productId = Number(product.id); // asegura que sea número
+
+    this.cartService.addCartItem(productId, 1).subscribe({
+      next: (res) => {
+        console.log(res.message);
+        alert(res.message);
+      },
+      error: (err) => {
+        console.error('Error al agregar al carrito:', err);
+        alert('Hubo un problema al añadir al carrito.');
+      }
+    });
   }
 }

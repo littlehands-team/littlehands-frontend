@@ -126,7 +126,7 @@
           <!-- Botón de agregar al carrito -->
           <button
             class="add-to-cart-btn"
-            (click)="addToCart($event, product)">
+            (click)="addToCart($event, product); $event.stopPropagation()">
             <mat-icon>shopping_cart</mat-icon>
           </button>
         </div>
