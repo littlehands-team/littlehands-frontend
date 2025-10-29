@@ -75,36 +75,6 @@ export class ProductDialog implements OnInit {
     this.productForm.get('discount_percentage')?.valueChanges.subscribe(() => this.calculateFinalPrice());
   }
 
-  get youtubeLinks(): FormArray {
-    return this.productForm.get('youtube_links') as FormArray;
-  }
-
-  get finalPrice(): number | null {
-    const price = this.productForm.get('price')?.value;
-    const discount = this.productForm.get('discount_percentage')?.value;
-
-    if (price && discount >= 0) {
-      return price - (price * discount / 100);
-    }
-    return price;
-  }
-
-  get discountAmount(): number {
-    const price = this.productForm.get('price')?.value || 0;
-    const discount = this.productForm.get('discount_percentage')?.value || 0;
-    return price * discount / 100;
-  }
-
-  calculateFinalPrice() {
-    // Trigger change detection
-    this.productForm.updateValueAndValidity({ emitEvent: false });
-  }
-
-  get shortDescriptionLength(): number {
-    const value = this.productForm.get('short_description')?.value;
-    return value ? value.length : 0;
-  }
-
   loadProductData(product: Product) {
     this.productForm.patchValue({
       name: product.name,
@@ -151,14 +121,6 @@ export class ProductDialog implements OnInit {
     if (this.fileInput) {
       this.fileInput.nativeElement.value = '';
     }
-  }
-
-  addVideoInput() {
-    this.youtubeLinks.push(this.fb.control(''));
-  }
-
-  removeVideo(index: number) {
-    this.youtubeLinks.removeAt(index);
   }
 
   onSubmit() {
@@ -238,6 +200,44 @@ export class ProductDialog implements OnInit {
         this.isLoading = false; // 🔹 Finaliza carga en error
       }
     });
+  }
+
+  get youtubeLinks(): FormArray {
+    return this.productForm.get('youtube_links') as FormArray;
+  }
+
+  get finalPrice(): number | null {
+    const price = this.productForm.get('price')?.value;
+    const discount = this.productForm.get('discount_percentage')?.value;
+
+    if (price && discount >= 0) {
+      return price - (price * discount / 100);
+    }
+    return price;
+  }
+
+  get discountAmount(): number {
+    const price = this.productForm.get('price')?.value || 0;
+    const discount = this.productForm.get('discount_percentage')?.value || 0;
+    return price * discount / 100;
+  }
+
+  calculateFinalPrice() {
+    // Trigger change detection
+    this.productForm.updateValueAndValidity({ emitEvent: false });
+  }
+
+  get shortDescriptionLength(): number {
+    const value = this.productForm.get('short_description')?.value;
+    return value ? value.length : 0;
+  }
+
+  addVideoInput() {
+    this.youtubeLinks.push(this.fb.control(''));
+  }
+
+  removeVideo(index: number) {
+    this.youtubeLinks.removeAt(index);
   }
 
   closeDialog() {

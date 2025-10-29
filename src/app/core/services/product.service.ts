@@ -15,67 +15,6 @@ export class ProductService {
 
   constructor(private http: HttpClient, private crypto: CryptoService) {}
 
-  getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.apiUrl}/products/`).pipe(
-      catchError((error) => {
-        console.error('Error al obtener productos:', error);
-        return of([]);
-      })
-    );
-  }
-
-  getProductBySlug(slug: string): Observable<Product | null> {
-    return this.http.get<Product>(`${this.apiUrl}/products/${slug}/`).pipe(
-      catchError((error) => {
-        console.error(`Error al obtener el producto con slug "${slug}":`, error);
-        return of(null);
-      })
-    );
-  }
-
-  getRecommendedProducts(slug: string): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.apiUrl}/products/${slug}/recommendations/`).pipe(
-      catchError((error) => {
-        console.error(`Error al obtener productos recomendados para "${slug}":`, error);
-        return of([]);
-      })
-    );
-  }
-
-  getShopProducts(
-    page: number = 1,
-    pageSize: number = 10,
-    minPrice?: number,
-    maxPrice?: number,
-    ages?: string[],
-    search?: string
-  ): Observable<ProductShopResponse | null> {
-    let params = new HttpParams()
-      .set('page', page.toString())
-      .set('page_size', pageSize.toString());
-
-    if (minPrice !== undefined && minPrice !== null) {
-      params = params.set('min_price', minPrice.toString());
-    }
-
-    if (maxPrice !== undefined && maxPrice !== null) {
-      params = params.set('max_price', maxPrice.toString());
-    }
-
-    if (ages && ages.length > 0) {
-      params = params.set('ages', ages.join(','));
-    }
-
-    if (search) params = params.set('search', search);
-
-    return this.http.get<ProductShopResponse>(`${this.apiUrl}/shop/products/`, { params }).pipe(
-      catchError((error) => {
-        console.error('Error al obtener productos de la tienda:', error);
-        return of(null);
-      })
-    );
-  }
-
   createProduct(product: Product): Observable<Product | null> {
     const userId = this.crypto.getCurrentUserId();
 
@@ -141,6 +80,67 @@ export class ProductService {
       catchError((error) => {
         console.error(`Error al eliminar producto con ID ${id}:`, error);
         return of(false);
+      })
+    );
+  }
+
+  getProducts(): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/products/`).pipe(
+      catchError((error) => {
+        console.error('Error al obtener productos:', error);
+        return of([]);
+      })
+    );
+  }
+
+  getProductBySlug(slug: string): Observable<Product | null> {
+    return this.http.get<Product>(`${this.apiUrl}/products/${slug}/`).pipe(
+      catchError((error) => {
+        console.error(`Error al obtener el producto con slug "${slug}":`, error);
+        return of(null);
+      })
+    );
+  }
+
+  getRecommendedProducts(slug: string): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/products/${slug}/recommendations/`).pipe(
+      catchError((error) => {
+        console.error(`Error al obtener productos recomendados para "${slug}":`, error);
+        return of([]);
+      })
+    );
+  }
+
+  getShopProducts(
+    page: number = 1,
+    pageSize: number = 10,
+    minPrice?: number,
+    maxPrice?: number,
+    ages?: string[],
+    search?: string
+  ): Observable<ProductShopResponse | null> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('page_size', pageSize.toString());
+
+    if (minPrice !== undefined && minPrice !== null) {
+      params = params.set('min_price', minPrice.toString());
+    }
+
+    if (maxPrice !== undefined && maxPrice !== null) {
+      params = params.set('max_price', maxPrice.toString());
+    }
+
+    if (ages && ages.length > 0) {
+      params = params.set('ages', ages.join(','));
+    }
+
+    if (search) params = params.set('search', search);
+
+    return this.http.get<ProductShopResponse>(`${this.apiUrl}/shop/products/`, { params }).pipe(
+      catchError((error) => {
+        console.error('Error al obtener productos de la tienda:', error);
+        return of(null);
       })
     );
   }
