@@ -213,7 +213,7 @@ export class Cart implements OnInit {
     message += `📅 ${timestamp}\n`;
     message += '\nPor favor confirmar la disponibilidad de los productos. 🙌';
 
-    const phoneNumber = '51940396169';
+    const phoneNumber = '51997311387';
     const encodedMessage = encodeURIComponent(message);
 
     // ✅ USAR API.WHATSAPP.COM - Funciona mejor con números nuevos
