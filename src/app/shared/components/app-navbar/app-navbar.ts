@@ -51,8 +51,9 @@ export class AppNavbar implements OnInit {
 
 
   onSearch() {
-    console.log('Buscando:', this.searchQuery);
-    // Implementar lógica de búsqueda
+    this.router.navigate(['/tienda'], {
+      queryParams: { search: this.searchQuery }
+    });
   }
 
   goToAccount() {
@@ -74,7 +75,6 @@ export class AppNavbar implements OnInit {
   }
 
   toggleMenu() {
-    console.log('Buscando:', this.menuOpened);
     this.menuOpened = !this.menuOpened;
   }
 

@@ -47,7 +47,8 @@ export class ProductService {
     pageSize: number = 10,
     minPrice?: number,
     maxPrice?: number,
-    ages?: string[]
+    ages?: string[],
+    search?: string
   ): Observable<ProductShopResponse | null> {
     let params = new HttpParams()
       .set('page', page.toString())
@@ -64,6 +65,8 @@ export class ProductService {
     if (ages && ages.length > 0) {
       params = params.set('ages', ages.join(','));
     }
+
+    if (search) params = params.set('search', search);
 
     return this.http.get<ProductShopResponse>(`${this.apiUrl}/shop/products/`, { params }).pipe(
       catchError((error) => {

@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { Product } from '../../shared/models/product.model';
 import { PriceRange } from '../../shared/models/product-shop-response.model';
 import { AgeCategory, AGE_CATEGORY_ORDER} from '../../shared/enums/age.enum';
+
 
 @Component({
   selector: 'app-shop',
@@ -36,7 +37,8 @@ export class Shop implements OnInit {
   filters = {
     minPrice: 0,
     maxPrice: 1000,
-    selectedAges: [] as string[]
+    selectedAges: [] as string[],
+    search: ''
   };
 
   // UI States
@@ -50,11 +52,17 @@ export class Shop implements OnInit {
 
   constructor(
     private productService: ProductService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
-    this.loadProducts();
+    this.route.queryParams.subscribe(params => {
+      const search = params['search'] || '';
+      this.filters.search = search;
+      this.currentPage = 1;
+      this.loadProducts(false);
+    });
   }
 
   loadProducts(append: boolean = false) {
@@ -69,7 +77,8 @@ export class Shop implements OnInit {
       this.pageSize,
       minPrice,
       maxPrice,
-      ages
+      ages,
+      this.filters.search
     ).subscribe((response) => {
       this.loading = false;
 
@@ -114,7 +123,8 @@ export class Shop implements OnInit {
     this.filters = {
       minPrice: 0,
       maxPrice: this.priceRange.max,
-      selectedAges: []
+      selectedAges: [],
+      search: ''
     };
     this.applyFilters();
   }
@@ -142,7 +152,7 @@ export class Shop implements OnInit {
   toggleAgeFilter() {
     this.ageFilterOpen = !this.ageFilterOpen;
   }
-  
+
   // Ordenamiento
   onSortChange() {
     switch (this.sortBy) {

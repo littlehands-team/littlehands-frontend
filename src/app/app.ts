@@ -11,5 +11,5 @@ import {FloatingChat} from './shared/components/floating-chat/floating-chat';
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('littlehands');
+  protected readonly title = signal('Littlehands');
 }

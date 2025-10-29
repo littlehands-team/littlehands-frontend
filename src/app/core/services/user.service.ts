@@ -20,7 +20,7 @@ export class UserService {
 
   // Registro
   register(data: RegisterRequest): Observable<ApiResponse<User>> {
-    return this.http.post<User>(`${this.apiUrl}/register/buyer/`, data).pipe(
+    return this.http.post<User>(`${this.apiUrl}/register/`, data).pipe(
       map((user) => ({
         success: true,
         message: 'Registro exitoso',
