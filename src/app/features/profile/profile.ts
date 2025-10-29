@@ -14,6 +14,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { ProductDialog } from './product-dialog/product-dialog';
 import {UserService} from '../../core/services/user.service';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 interface Order {
@@ -27,7 +28,7 @@ interface Order {
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatIconModule, MatButtonModule, MatSnackBarModule, MatDialogModule, MatTooltipModule],
+  imports: [CommonModule, MatTableModule, MatIconModule, MatButtonModule, MatSnackBarModule, MatDialogModule, MatTooltipModule, MatProgressSpinnerModule],
   templateUrl: './profile.html',
   styleUrl: './profile.css'
 })
@@ -39,29 +40,7 @@ export class Profile implements OnInit {
 
   userInfo: User | null = null;
 
-  orders: Order[] = [
-    {
-      id: '#12345',
-      date: '15 de Octubre, 2025',
-      total: 150.50,
-      status: 'completed',
-      items: 3
-    },
-    {
-      id: '#12344',
-      date: '10 de Octubre, 2025',
-      total: 89.99,
-      status: 'pending',
-      items: 2
-    },
-    {
-      id: '#12343',
-      date: '5 de Octubre, 2025',
-      total: 200.00,
-      status: 'completed',
-      items: 5
-    }
-  ];
+  isProductsListLoading: boolean = false;
 
   private _snackBar = inject(MatSnackBar);
 
@@ -91,10 +70,21 @@ export class Profile implements OnInit {
   }
 
   loadProducts() {
-    this.productService.getProducts().subscribe((products) => {
-      this.products = products;
+    this.isProductsListLoading = true;
+
+    this.productService.getProducts().subscribe({
+      next: (products) => {
+        this.products = products;
+        this.isProductsListLoading = false;
+      },
+      error: (err) => {
+        console.error('Error al cargar productos:', err);
+        this._snackBar.open('Error al cargar productos', 'Cerrar', { duration: 3000 });
+        this.isProductsListLoading = false;
+      }
     });
   }
+
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -126,7 +116,8 @@ export class Profile implements OnInit {
     const dialogRef = this.dialog.open(ProductDialog, {
       width: '800px',
       maxHeight: '90vh',
-      data: product ? { ...product } : null
+      data: product ? { ...product } : null,
+      disableClose: true
     });
 
     dialogRef.afterClosed().subscribe((result) => {

@@ -85,7 +85,13 @@
           </button>
         </div>
 
-        <div class="products-table-container">
+        <!-- 🌀 Spinner visible mientras carga -->
+        <div class="loading-container" *ngIf="isProductsListLoading">
+          <mat-spinner diameter="50" color="accent"></mat-spinner>
+          <p>Cargando productos...</p>
+        </div>
+
+        <div class="products-table-container" *ngIf="!isProductsListLoading">
           <table mat-table [dataSource]="products" class="products-table">
 
             <!-- Name Column -->
@@ -157,6 +163,7 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
           </table>
 
+          <!-- 🪶 Mensaje si no hay productos -->
           <div *ngIf="products.length === 0" class="empty-products">
             <mat-icon>inventory_2</mat-icon>
             <p>No hay productos registrados.</p>

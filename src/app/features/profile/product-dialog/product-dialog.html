@@ -131,7 +131,7 @@
             #fileInput />
           <label for="image" class="file-label">
             <mat-icon>cloud_upload</mat-icon>
-            <span>{{ uploadingImage ? 'Subiendo...' : 'Seleccionar imagen' }}</span>
+            <span class="cloud_upload_span">{{ uploadingImage ? 'Subiendo...' : 'Seleccionar imagen' }}</span>
           </label>
         </div>
       </div>
@@ -161,18 +161,25 @@
     </div>
 
     <!-- Actions -->
+    <!-- Actions -->
     <div class="dialog-actions">
       <button type="button" class="btn-cancel" (click)="closeDialog()">
         Cancelar
       </button>
+
       <button
         type="submit"
         class="btn-save"
-        [disabled]="productForm.invalid || (!imageSelected && !productForm.get('image_url')?.value) || uploadingImage">
-        {{ isEditMode ? 'Guardar cambios' : 'Crear producto' }}
+        [disabled]="productForm.invalid || (!imageSelected && !productForm.get('image_url')?.value) || uploadingImage || isLoading">
+        <ng-container *ngIf="!isLoading; else loading">
+          {{ isEditMode ? 'Guardar cambios' : 'Crear producto' }}
+        </ng-container>
+        <ng-template #loading>
+          <mat-spinner diameter="20"></mat-spinner>
+        </ng-template>
       </button>
-
     </div>
+
 
   </form>
 </div>

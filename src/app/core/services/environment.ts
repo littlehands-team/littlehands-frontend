@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8000/littlehands',
+  apiUrl: 'https://littlehands-backend.onrender.com/littlehands',
   SECRET_KEY: 'LittleHandsUPC',
   cloudinary: {
     cloudName: 'dgz0buqcx',

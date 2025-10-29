@@ -11,6 +11,7 @@ import { CloudinaryService } from '../../../core/services/cloudinary.service';
 import { CryptoService } from '../../../core/services/crypto.service';
 import { NgToastService } from 'ng-angular-popup';
 import { AgeCategory, AgeCategoryLabels, AGE_CATEGORY_ORDER} from '../../../shared/enums/age.enum';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 @Component({
@@ -20,7 +21,8 @@ import { AgeCategory, AgeCategoryLabels, AGE_CATEGORY_ORDER} from '../../../shar
     CommonModule,
     ReactiveFormsModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './product-dialog.html',
   styleUrl: './product-dialog.css'
@@ -36,6 +38,7 @@ export class ProductDialog implements OnInit {
   AgeCategory = AgeCategory;
   ageCategories = AGE_CATEGORY_ORDER;
   AgeCategoryLabels = AgeCategoryLabels;
+  isLoading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -171,13 +174,12 @@ export class ProductDialog implements OnInit {
     }
 
     const formValue = this.productForm.value;
+    this.isLoading = true; // 🔹 Inicia carga
 
-    // 🔹 Si el descuento está vacío, asumir 0
     if (formValue.discount_percentage === null || formValue.discount_percentage === '' || isNaN(formValue.discount_percentage)) {
       formValue.discount_percentage = 0;
     }
 
-    // 🔹 Subir imagen solo si hay una seleccionada y aún no tiene URL
     if (this.imageSelected && !formValue.image_url) {
       this.uploadingImage = true;
       this.cloudinaryService.uploadImage(this.imageSelected).subscribe({
@@ -189,11 +191,11 @@ export class ProductDialog implements OnInit {
         error: (error) => {
           console.error('Error al subir la imagen:', error);
           this.uploadingImage = false;
+          this.isLoading = false; // 🔹 Finaliza carga en error
           this.toast.danger('Error al subir la imagen', 'Error', 3000);
         }
       });
     } else {
-      // Si ya tiene imagen subida o estamos editando sin cambiarla
       this.saveProduct();
     }
   }
@@ -201,7 +203,6 @@ export class ProductDialog implements OnInit {
   private saveProduct() {
     const formValue = this.productForm.value;
 
-    // Filtrar videos vacíos
     const validVideos = formValue.youtube_links.filter((link: string) => link.trim() !== '');
 
     const productRequest: ProductRequest = {
@@ -217,31 +218,27 @@ export class ProductDialog implements OnInit {
       is_active: formValue.is_active
     };
 
-    if (this.isEditMode && this.data?.id) {
-      this.productService.updateProduct(this.data.id, productRequest as any).subscribe({
-        next: () => {
-          this.toast.success('Producto actualizado exitosamente', 'Éxito', 3000);
-          this.dialogRef.close(true);
-        },
-        error: (error) => {
-          console.error('Error updating product:', error);
-          this.toast.danger('Error al actualizar el producto', 'Error', 3000);
-        }
-      });
-    } else {
-      this.productService.createProduct(productRequest as any).subscribe({
-        next: () => {
-          this.toast.success('Producto creado exitosamente', 'Éxito', 3000);
-          this.dialogRef.close(true);
-        },
-        error: (error) => {
-          console.error('Error creating product:', error);
-          this.toast.danger('Error al crear el producto', 'Error', 3000);
-        }
-      });
-    }
-  }
+    const request$ = this.isEditMode && this.data?.id
+      ? this.productService.updateProduct(this.data.id, productRequest as any)
+      : this.productService.createProduct(productRequest as any);
 
+    request$.subscribe({
+      next: () => {
+        this.toast.success(
+          this.isEditMode ? 'Producto actualizado exitosamente' : 'Producto creado exitosamente',
+          'Éxito',
+          3000
+        );
+        this.dialogRef.close(true);
+        this.isLoading = false; // 🔹 Finaliza carga
+      },
+      error: (error) => {
+        console.error('Error saving product:', error);
+        this.toast.danger('Error al guardar el producto', 'Error', 3000);
+        this.isLoading = false; // 🔹 Finaliza carga en error
+      }
+    });
+  }
 
   closeDialog() {
     this.dialogRef.close(false);

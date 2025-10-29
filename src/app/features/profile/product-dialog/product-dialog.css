@@ -178,6 +178,10 @@
   color: #666;
 }
 
+.cloud_upload_span{
+  min-height: 48px !important ;
+}
+
 .file-label mat-icon {
   font-size: 48px;
   width: 48px;
@@ -235,6 +239,10 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .btn-cancel {
@@ -258,6 +266,18 @@
 .btn-save:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+  opacity: 0.8;
+}
+
+/* Spinner blanco pequeño */
+mat-spinner {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.mat-mdc-progress-spinner .mdc-circular-progress__determinate-circle,
+.mat-mdc-progress-spinner .mdc-circular-progress__indeterminate-circle-graphic {
+  stroke: white !important;
 }
 
 @media (max-width: 679px) {
