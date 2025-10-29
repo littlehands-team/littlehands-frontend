@@ -232,7 +232,7 @@
 
           <div class="product-pricing">
             <span class="original-price" *ngIf="product.discount_percentage > 0">
-              {{ product.price }} €
+              S/ {{ product.price }}
             </span>
             <span class="final-price">
               {{ calculateFinalPrice(product) }} €
@@ -242,7 +242,7 @@
           <!-- Botón de agregar al carrito -->
           <button
             class="add-to-cart-btn"
-            (click)="addToCart($event, product)">
+            (click)="addToCart($event, product); $event.stopPropagation()">
             <mat-icon>shopping_cart</mat-icon>
           </button>
         </div>

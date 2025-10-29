@@ -722,9 +722,19 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .product-info {
+    padding: 16px 0;
+  }
+
   .product-main {
     grid-template-columns: 1fr;
     gap: 2rem;
+  }
+
+
+  .btn-add-to-cart {
+    flex: 1;
+    padding: 10px;
   }
 
   .cart-section {
@@ -737,10 +747,12 @@
   }
 
   .product-name {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
+    margin-left: 15px;
   }
 
   .final-price {
     font-size: 1.5rem;
+    margin-left: 20px;
   }
 }

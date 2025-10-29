@@ -272,9 +272,23 @@ export class ProductDetail implements OnInit {
   }
 
   addToCart(event: Event, product: Product) {
-    event.stopPropagation(); // Evitar que se active el click del card
-    console.log('Agregar al carrito:', product);
-    // TODO: Implementar lógica de carrito
+    if (!product?.id) { // <- corregido
+      console.error('❌ No se encontró el ID del producto.');
+      return;
+    }
+
+    const productId = Number(product.id); // asegura que sea número
+
+    this.cartService.addCartItem(productId, 1).subscribe({
+      next: (res) => {
+        console.log(res.message);
+        alert(res.message);
+      },
+      error: (err) => {
+        console.error('Error al agregar al carrito:', err);
+        alert('Hubo un problema al añadir al carrito.');
+      }
+    });
   }
 
   // Calcular precio final
