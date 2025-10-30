@@ -64,8 +64,8 @@
       <!-- Price -->
       <div class="price-section">
         <div class="price" [class.has-discount]="hasDiscount">
-          <span class="final-price">{{ finalPrice | number:'1.2-2' }} €</span>
-          <span *ngIf="hasDiscount" class="original-price">{{ product.price | number:'1.2-2' }} €</span>
+          <span class="final-price">S/ {{ finalPrice | number:'1.2-2' }}</span>
+          <span *ngIf="hasDiscount" class="original-price">S/ {{ product.price | number:'1.2-2' }}</span>
         </div>
       </div>
 
@@ -235,7 +235,7 @@
               S/ {{ product.price }}
             </span>
             <span class="final-price">
-              {{ calculateFinalPrice(product) }} €
+              S/ {{ calculateFinalPrice(product) }}
             </span>
           </div>
 

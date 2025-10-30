@@ -16,13 +16,13 @@
             <input
               type="number"
               [(ngModel)]="filters.minPrice"
-              [placeholder]="'0 €'"
+              [placeholder]="'S/ 0'"
               (change)="applyFilters()" />
             <span>-</span>
             <input
               type="number"
               [(ngModel)]="filters.maxPrice"
-              [placeholder]="priceRange.max + ' €'"
+              [placeholder]="' S/' + priceRange.max"
               (change)="applyFilters()" />
           </div>
 
@@ -116,7 +116,7 @@
 
           <div class="product-pricing">
             <span class="original-price" *ngIf="product.discount_percentage > 0">
-              {{ product.price }} €
+              S/ {{ product.price }}
             </span>
             <span class="final-price">
               S/ {{ calculateFinalPrice(product) }}

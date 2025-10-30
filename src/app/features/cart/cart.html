@@ -125,7 +125,7 @@
 
         <div class="summary-row">
           <span>Envío</span>
-          <span class="free">Gratis</span>
+          <span class="delivery-cost">S/ 8.00</span>
         </div>
 
         <div *ngIf="inactiveItemsCount > 0" class="summary-row inactive-items">
@@ -137,7 +137,7 @@
 
         <div class="summary-row total">
           <span>Total</span>
-          <span class="total-price">S/ {{ cartTotal | number:'1.2-2' }}</span>
+          <span class="total-price">S/ {{ cartTotalWithDelivery | number:'1.2-2' }}</span>
         </div>
 
         <button
@@ -153,15 +153,63 @@
           ← Seguir comprando
         </button>
 
-        <!-- Info Notice -->
-        <div class="summary-notice">
+        <!-- Delivery Info Notice -->
+        <div class="summary-notice delivery-info">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="16" x2="12" y2="12"></line>
-            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            <rect x="1" y="3" width="15" height="13"></rect>
+            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+            <circle cx="18.5" cy="18.5" r="2.5"></circle>
           </svg>
-          <p>Envío gratis en pedidos dentro de Lima Metropolitana</p>
+          <div class="delivery-content">
+            <p class="delivery-title"><strong>Delivery: S/ 8.00</strong></p>
+            <p class="delivery-zones">Cobertura en Lima Metropolitana</p>
+            <button class="btn-view-map" (click)="toggleDeliveryMap()">
+              {{ showDeliveryMap ? 'Ocultar' : 'Ver' }} zonas de cobertura
+            </button>
+
+            <!-- Expandible Map Info -->
+            <div *ngIf="showDeliveryMap" class="delivery-map-info">
+              <p class="map-description">
+                <strong>Zonas de cobertura regular:</strong>
+              </p>
+              <ul class="zones-list">
+                <li>San Miguel</li>
+                <li>Pueblo Libre</li>
+                <li>Cercado de Lima</li>
+                <li>Breña</li>
+                <li>La Victoria</li>
+                <li>San Luis</li>
+                <li>Ate</li>
+                <li>Jesús María</li>
+                <li>Lince</li>
+                <li>Magdalena</li>
+                <li>San Isidro</li>
+                <li>Miraflores</li>
+                <li>Surquillo</li>
+                <li>Santiago de Surco</li>
+                <li>San Borja</li>
+                <li>La Molina</li>
+                <li>Barranco</li>
+                <li>Chorrillos</li>
+              </ul>
+              <p class="zones-note">(*) Limitado a ciertas zonas</p>
+
+              <a
+                href="https://www.google.com/maps/d/viewer?mid=1Fb3nvcX0UPoeyq5vdgmTk_uYx4-XKH_o&ll=-12.121238383537499%2C-77.14602673543818&z=12"
+                target="_blank"
+                class="btn-open-map"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                Abrir mapa
+              </a>
+            </div>
+          </div>
         </div>
+
       </div>
 
     </div>

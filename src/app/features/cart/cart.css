@@ -462,6 +462,10 @@
 /* SUMMARY NOTICE */
 /* ============================================ */
 
+/* ============================================ */
+/* DELIVERY INFO */
+/* ============================================ */
+
 .summary-notice {
   margin-top: 1.5rem;
   padding: 1rem;
@@ -483,6 +487,142 @@
   font-size: 0.85rem;
   color: #666;
   line-height: 1.5;
+}
+
+.delivery-info {
+  background: #fff8e1;
+  border: 1px solid #ffecb3;
+}
+
+.delivery-info svg {
+  color: #ff9800;
+}
+
+.delivery-content {
+  flex: 1;
+}
+
+.delivery-title {
+  font-size: 0.95rem;
+  color: #333;
+  margin-bottom: 0.25rem;
+}
+
+.delivery-zones {
+  color: #666;
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+}
+
+.btn-view-map {
+  background: transparent;
+  border: none;
+  color: #ff9800;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.btn-view-map:hover {
+  color: #f57c00;
+}
+
+.delivery-map-info {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ffecb3;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.map-description {
+  font-size: 0.85rem;
+  color: #333;
+  margin-bottom: 0.75rem;
+}
+
+.zones-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  margin: 0 0 0.75rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.zones-list li {
+  font-size: 0.8rem;
+  color: #666;
+  padding: 0.25rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.zones-list li::before {
+  content: '📍';
+  font-size: 0.75rem;
+}
+
+.zones-note {
+  font-size: 0.75rem;
+  color: #999;
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+
+.btn-open-map {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #ff9800;
+  color: white;
+  text-decoration: none;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  margin-top: 5px;
+}
+
+.btn-open-map:hover {
+  background: #f57c00;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+}
+
+.btn-open-map svg {
+  color: white;
+}
+
+/* Estilo para el costo de delivery en el summary */
+.delivery-cost {
+  color: #ff9800;
+  font-weight: 600;
+}
+
+/* ============================================ */
+/* RESPONSIVE PARA DELIVERY */
+/* ============================================ */
+
+@media (max-width: 480px) {
+  .zones-list {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ============================================ */

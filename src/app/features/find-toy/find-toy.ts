@@ -206,7 +206,7 @@ export class FindToy implements OnInit {
     } else {
       // Abrir WhatsApp para productos inactivos
       const message = `Hola 👋, estoy interesado en el producto: ${product.name}`;
-      const whatsappUrl = `https://wa.me/51997311387?text=${encodeURIComponent(message)}`;
+      const whatsappUrl = `https://wa.me/51904205500?text=${encodeURIComponent(message)}`;
       window.open(whatsappUrl, '_blank');
     }
   }

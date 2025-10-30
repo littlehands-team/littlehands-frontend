@@ -18,6 +18,7 @@ export class Cart implements OnInit {
   cartItems: CartItem[] = [];
   loading: boolean = true;
   updatingItem: number | null = null; // ID del item que se está actualizando
+  showDeliveryMap: boolean = false;
 
   constructor(
     private cartService: CartService,
@@ -41,6 +42,13 @@ export class Cart implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  toggleDeliveryMap(): void {
+    this.showDeliveryMap = !this.showDeliveryMap;
+  }
+  get cartTotalWithDelivery(): number {
+    return this.cartTotal + 8; // Total productos + delivery
   }
 
   // Calcular precio final de un producto (con descuento)
@@ -213,7 +221,7 @@ export class Cart implements OnInit {
     message += `📅 ${timestamp}\n`;
     message += '\nPor favor confirmar la disponibilidad de los productos. 🙌';
 
-    const phoneNumber = '51997311387';
+    const phoneNumber = '51904205500';
     const encodedMessage = encodeURIComponent(message);
 
     // ✅ USAR API.WHATSAPP.COM - Funciona mejor con números nuevos
