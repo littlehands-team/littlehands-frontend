@@ -1,0 +1,45 @@
+<div class="whatsapp-dialog">
+  <div class="dialog-header">
+    <h2>
+      <i class="fab fa-whatsapp"></i>
+      Enviar pedido por WhatsApp
+    </h2>
+    <button mat-icon-button (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="dialog-content">
+    <div class="alert-info">
+      <mat-icon>info</mat-icon>
+      <div>
+        <p class="alert-title">Hemos detectado que estás en un ordenador 💻</p>
+        <p class="alert-text">
+          A veces WhatsApp Web bloquea los mensajes directos 😅.
+          Si el mensaje no se carga automáticamente, puedes copiarlo aquí.
+        </p>
+      </div>
+    </div>
+
+    <div class="message-preview">
+      <label>Vista previa del mensaje:</label>
+      <textarea
+        readonly
+        [value]="data.message"
+        #messageTextarea
+        rows="10"></textarea>
+    </div>
+
+    <div class="actions">
+      <button class="btn-copy" (click)="copyMessage()">
+        <mat-icon>{{ copied ? 'check' : 'content_copy' }}</mat-icon>
+        {{ copied ? '¡Copiado!' : 'Copiar mensaje' }}
+      </button>
+
+      <button class="btn-whatsapp" (click)="openWhatsApp()">
+        <i class="fab fa-whatsapp"></i>
+        Abrir WhatsApp Web
+      </button>
+    </div>
+  </div>
+</div>

@@ -6,6 +6,8 @@ import { CartService } from '../../core/services/cart.service';
 import { CartItem } from '../../shared/models/cart-item.model';
 import { Product } from '../../shared/models/product.model';
 import {CryptoService} from '../../core/services/crypto.service';
+import {WhatsappMessageDialog} from './whatsapp-message-dialog/whatsapp-message-dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-cart',
@@ -23,7 +25,8 @@ export class Cart implements OnInit {
   constructor(
     private cartService: CartService,
     private router: Router,
-    private cryptoService: CryptoService
+    private cryptoService: CryptoService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -224,10 +227,24 @@ export class Cart implements OnInit {
     const phoneNumber = '51904205500';
     const encodedMessage = encodeURIComponent(message);
 
-    // ✅ USAR API.WHATSAPP.COM - Funciona mejor con números nuevos
-    const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
+    // ✅ Detectar si es móvil o desktop
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-    window.open(whatsappUrl, '_blank');
+    if (isMobile) {
+      // En móvil: abrir directamente WhatsApp
+      const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
+      window.open(whatsappUrl, '_blank');
+    } else {
+      // En desktop: mostrar modal con opción de copiar
+      this.dialog.open(WhatsappMessageDialog, {
+        width: '500px',
+        data: {
+          message: message,
+          phoneNumber: phoneNumber,
+          encodedMessage: encodedMessage
+        }
+      });
+    }
 
     // Limpiar carrito
     const activeItemIds = this.cartItems
