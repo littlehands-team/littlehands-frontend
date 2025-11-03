@@ -49,7 +49,7 @@ export class FindToy implements OnInit {
     {
       id: 'age',
       question: '¿Qué edad tiene?',
-      options: ['0-2 años', '3-5 años', '6-8 años', '9+ años'],
+      options: ['0-1 año', '2-3 años', '4-5 años', '6 años'],
       emoji: '🎂'
     },
     {
