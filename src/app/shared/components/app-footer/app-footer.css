@@ -1,4 +1,9 @@
 /* Footer wrapper */
+
+.footer-links:hover {
+  cursor: pointer !important;
+}
+
 .footer-wrapper {
   background-color: #aec5b5;
   color: white;
@@ -58,6 +63,7 @@
 
 .footer-links a:hover {
   opacity: 0.7;
+  cursor: pointer;
 }
 
 /* Redes sociales */

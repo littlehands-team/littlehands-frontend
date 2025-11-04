@@ -12,6 +12,7 @@
 /* FONDO ANIMADO CON CIELO Y NUBES */
 /* ============================================ */
 
+
 .sky-background {
   position: absolute; /* CAMBIO: antes estaba fixed */
   top: 0;
